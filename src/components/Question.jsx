@@ -38,10 +38,13 @@ function Question({ isQuestionStarted, setIsQuestionStarted }) {
   return isWebcamOpen ? (
     isQuestionStarted ? (
       questionCount < 10 ? (
-        <QuestionBox>
-          <div className="question">{randomQuestionList[questionCount]}</div>
-          <div className="time">{time}</div>
-        </QuestionBox>
+        <>
+          <QuestionBox>
+            <div className="question">{randomQuestionList[questionCount]}</div>
+            <div className="time">{time}</div>
+          </QuestionBox>
+          <ProgressBox>진행률 {questionCount + 1}0%</ProgressBox>
+        </>
       ) : (
         <></>
       )
@@ -105,6 +108,21 @@ const QuestionBox = styled.div`
     border-radius: 50%;
     padding-top: 4px;
   }
+`;
+
+const ProgressBox = styled.div`
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  top: 5%;
+  right: 15%;
+  width: 13%;
+  background-color: white;
+  color: black;
+  padding: 20px;
+  font-size: 35px;
+  border-radius: 15px;
 `;
 
 export default Question;
