@@ -30,7 +30,6 @@ module.exports = {
     "eqeqeq": ["warn"],
     "no-var": ["error"],
     "prefer-const": ["warn"],
-    "prefer-destructuring": ["warn"],
     "react/prop-types": ["off"],
   },
   parserOptions: {
