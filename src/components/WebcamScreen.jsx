@@ -20,14 +20,16 @@ function WebcamScreen({ isQuestionStarted }) {
         return;
       }
     } catch (error) {
-      console.log(error);
+      console.log("얼굴 인식이 되지 않고 있음");
     }
   };
 
   const clearOverlay = (canvas) => {
     const ctx = canvasRef.current?.getContext("2d");
 
-    ctx.clearRect(0, 0, canvas?.width, canvas?.height);
+    if (ctx) {
+      ctx.clearRect(0, 0, canvas?.width, canvas?.height);
+    }
   };
 
   const initGaze = async () => {
