@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 
 import WebcamScreen from "./WebcamScreen";
@@ -6,10 +6,15 @@ import Question from "./Question";
 import WebcamButton from "./WebcamButton";
 
 function Main() {
+  const [isQuestionStarted, setIsQuestionStarted] = useState(false);
+
   return (
     <ContentBox>
-      <WebcamScreen />
-      <Question />
+      <WebcamScreen isQuestionStarted={isQuestionStarted} />
+      <Question
+        isQuestionStarted={isQuestionStarted}
+        setIsQuestionStarted={setIsQuestionStarted}
+      />
       <WebcamButton />
     </ContentBox>
   );

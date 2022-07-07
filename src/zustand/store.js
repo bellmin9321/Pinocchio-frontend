@@ -7,7 +7,7 @@ const store = (set) => ({
   isWebcamOpen: true,
   toggleIsWebcamOpen: () =>
     set((state) => ({ isWebcamOpen: !state.isWebcamOpen })),
-  isMirrored: true,
+  isMirrored: false,
   toggleIsMirrored: () => set((state) => ({ isMirrored: !state.isMirrored })),
 });
 
