@@ -1,23 +1,50 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import { delay } from "../constants/question";
+import { useInterval } from "../helpers/useInterval";
 import useStore from "../zustand/store";
 
 function Question({ isQuestionStarted, setIsQuestionStarted }) {
-  const { isWebcamOpen } = useStore();
-  const [time, setTime] = useState(3);
+  const { isWebcamOpen, questionList, randomQuestionList } = useStore();
+  const [time, setTime] = useState(5);
+  const [questionCount, setQuestionCount] = useState(0);
+
+  useEffect(() => {
+    while (randomQuestionList.length < 10) {
+      const randomQuestion = questionList.splice(
+        Math.floor(Math.random() * questionList.length),
+        1,
+      )[0];
+
+      randomQuestionList.push(randomQuestion);
+    }
+  }, []);
 
   useEffect(() => {
     if (isQuestionStarted === true) {
-      time > 0 && setTimeout(() => setTime(time - 1), 1000);
+      time > 1 && setTimeout(() => setTime(time - 1), 1000);
     }
-  }, [time, isQuestionStarted]);
+  }, [isQuestionStarted, time]);
+
+  useInterval(() => {
+    if (questionCount < 10) {
+      setTimeout(() => {
+        setQuestionCount(questionCount + 1);
+        setTime(5);
+      }, 2000);
+    }
+  }, delay);
 
   return isWebcamOpen ? (
     isQuestionStarted ? (
-      <QuestionBox>
-        <div className="question">나는 지금 떨고있다</div>
-        <div className="time">{time}</div>
-      </QuestionBox>
+      questionCount < 10 ? (
+        <QuestionBox>
+          <div className="question">{randomQuestionList[questionCount]}</div>
+          <div className="time">{time}</div>
+        </QuestionBox>
+      ) : (
+        <></>
+      )
     ) : (
       <QuestionStartBox onClick={() => setIsQuestionStarted(true)}>
         <div>질문시작</div>
@@ -52,8 +79,9 @@ const QuestionBox = styled.div`
   justify-content: center;
   align-items: center;
   bottom: 12%;
-  width: 40%;
+  width: 60%;
   background-color: white;
+  padding: 0 20px;
   font-size: 40px;
   border-radius: 15px;
 
@@ -61,7 +89,7 @@ const QuestionBox = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 20px 10px;
+    padding: 30px 20px;
     width: 80%;
   }
 
