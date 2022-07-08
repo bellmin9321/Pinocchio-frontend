@@ -8,7 +8,7 @@ function Home() {
       <Link to="/main">
         <Logo src="image/beHonest.png" />
       </Link>
-      <Title>Be honest</Title>
+      <Title>Be honest .</Title>
     </>
   );
 }
@@ -31,6 +31,14 @@ const Title = styled.div`
   font-size: 120px;
   letter-spacing: -0.03em;
   color: #d33c0f;
+  clip-path: inset(0 11ch 0 0);
+  animation: l 3s steps(30) infinite;
+
+  @keyframes l {
+    to {
+      clip-path: inset(0 0 0 0);
+    }
+  }
 
   :hover {
     color: #131373;
