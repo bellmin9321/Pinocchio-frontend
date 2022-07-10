@@ -2,7 +2,8 @@ import React, { useEffect, useRef } from "react";
 import styled from "styled-components";
 import Webcam from "react-webcam";
 import useStore from "../zustand/store";
-import { detectFaces, drawResults, gaze } from "../helpers/faceApi";
+import { detectFaces, drawResults } from "../helpers/headDetection";
+import { initEyeDetection, renderPrediction } from "../helpers/eyeDetection";
 
 function WebcamScreen({ isQuestionStarted }) {
   const { isWebcamOpen, isMuted, isMirrored } = useStore();
@@ -32,21 +33,12 @@ function WebcamScreen({ isQuestionStarted }) {
     }
   };
 
-  const initGaze = async () => {
-    await gaze.loadModel();
-    await gaze.setUpCamera(video);
-
-    const predict = async () => {
-      const gazePrediction = await gaze.renderGazePrediction();
-      console.log(gazePrediction);
-    };
-
-    predict();
-  };
-
   useEffect(() => {
     if (webcamRef !== null && isQuestionStarted === true) {
+      initEyeDetection(video, canvas);
       const ticking = setInterval(async () => {
+        const result = await renderPrediction(video);
+        console.log(result);
         await getFaces();
       }, 1000);
 
@@ -95,8 +87,6 @@ const Canvas = styled.canvas`
   left: 0;
   right: 0;
   text-align: center;
-  width: 300;
-  height: 300;
 `;
 
 export default WebcamScreen;
