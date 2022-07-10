@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { delay } from "../constants/question";
+import {
+  QUESTION_INTERVAL,
+  QUESTION_DELAY,
+  QUESTION_COUNTDOWN,
+  TOTAL_QUESTIONS,
+} from "../constants";
 import { useInterval } from "../helpers/useInterval";
 import useStore from "../zustand/store";
 
@@ -10,7 +15,7 @@ function Question({ isQuestionStarted, setIsQuestionStarted }) {
   const [questionCount, setQuestionCount] = useState(0);
 
   useEffect(() => {
-    while (randomQuestionList.length < 10) {
+    while (randomQuestionList.length < TOTAL_QUESTIONS) {
       const randomQuestion = questionList.splice(
         Math.floor(Math.random() * questionList.length),
         1,
@@ -20,30 +25,34 @@ function Question({ isQuestionStarted, setIsQuestionStarted }) {
     }
   }, []);
 
+  useInterval(
+    () => {
+      if (questionCount < TOTAL_QUESTIONS && isQuestionStarted === true) {
+        setTimeout(() => {
+          setQuestionCount(questionCount + 1);
+          setTime(5);
+        }, QUESTION_DELAY);
+      }
+    },
+    QUESTION_INTERVAL,
+    isQuestionStarted,
+  );
+
   useEffect(() => {
     if (isQuestionStarted === true) {
-      time > 1 && setTimeout(() => setTime(time - 1), 1000);
+      time > 1 && setTimeout(() => setTime(time - 1), QUESTION_COUNTDOWN);
     }
   }, [isQuestionStarted, time]);
 
-  useInterval(() => {
-    if (questionCount < 10) {
-      setTimeout(() => {
-        setQuestionCount(questionCount + 1);
-        setTime(5);
-      }, 2000);
-    }
-  }, delay);
-
   return isWebcamOpen ? (
     isQuestionStarted ? (
-      questionCount < 10 ? (
+      questionCount < TOTAL_QUESTIONS ? (
         <>
           <QuestionBox>
             <div className="question">{randomQuestionList[questionCount]}</div>
             <div className="time">{time}</div>
           </QuestionBox>
-          <ProgressBox>진행률 {questionCount + 1}0%</ProgressBox>
+          <ProgressBox>진행률 {questionCount}0%</ProgressBox>
         </>
       ) : (
         <></>

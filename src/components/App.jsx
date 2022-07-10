@@ -1,7 +1,7 @@
 import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import styled from "styled-components";
-import { loadModels } from "../helpers/faceApi";
+import { loadModels } from "../helpers/headDetection";
 
 import Main from "./Main";
 import AnalysisResult from "./AnalysisResult";
