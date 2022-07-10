@@ -5,18 +5,19 @@ import WebcamScreen from "./WebcamScreen";
 import Question from "./Question";
 import WebcamButton from "./WebcamButton";
 import Loading from "./Loading";
+import { LOADING_DELAY } from "../constants";
 
 function Main() {
   const [isQuestionStarted, setIsQuestionStarted] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  const loadingTime = () =>
+  const generateLoadingTime = () =>
     setTimeout(() => {
       setIsLoading(false);
-    }, 4000);
+    }, LOADING_DELAY);
 
   useEffect(() => {
-    loadingTime();
+    generateLoadingTime();
   }, []);
 
   return (

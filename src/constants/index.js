@@ -3,6 +3,7 @@ export const QUESTION_INTERVAL = 5000;
 export const QUESTION_DELAY = 1000;
 export const QUESTION_COUNTDOWN = 1000;
 export const TOTAL_QUESTIONS = 10;
+export const LOADING_DELAY = 4000;
 
 // Mediapipe-facemesh Keypoints
 export const boundingBox = {
