@@ -1,16 +1,19 @@
 import React from "react";
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
-import useStore from "../zustand/store";
 
+import useStore from "../zustand/store";
 import { FaExchangeAlt } from "react-icons/fa";
 import { MdCallEnd } from "react-icons/md";
 import { BsCameraVideoFill, BsCameraVideoOffFill } from "react-icons/bs";
 import { AiTwotoneAudio, AiOutlineAudioMuted } from "react-icons/ai";
 
 const WebcamButton = () => {
-  const navigate = useNavigate();
   const { isMuted, isWebcamOpen } = useStore();
+
+  const showModalSmall = () => {
+    useStore.setState({ modalSize: "SMALL" });
+    useStore.setState({ showModal: true });
+  };
 
   return (
     <WebcamButtonLayout>
@@ -37,7 +40,7 @@ const WebcamButton = () => {
       <Icon onClick={useStore((state) => state.toggleIsMirrored)}>
         <FaExchangeAlt />
       </Icon>
-      <Icon className="end" onClick={() => navigate(-1)}>
+      <Icon className="end" onClick={showModalSmall}>
         <MdCallEnd />
       </Icon>
     </WebcamButtonLayout>
