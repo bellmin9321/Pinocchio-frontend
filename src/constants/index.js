@@ -6,7 +6,7 @@ export const TOTAL_QUESTIONS = 10;
 export const LOADING_DELAY = 4000;
 
 // Mediapipe-facemesh Keypoints
-export const boundingBox = {
+export const BOUNDING_BOX = {
   topLeft: [232.28, 145.26],
   bottomRight: [449.75, 308.36],
 };
