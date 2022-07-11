@@ -1,7 +1,7 @@
 import * as faceLandmarksDetection from "@tensorflow-models/face-landmarks-detection";
 import * as tf from "@tensorflow/tfjs-core";
 import "@tensorflow/tfjs-backend-webgl";
-import { MESH_ANNOTATIONS, boundingBox } from "../constants";
+import { MESH_ANNOTATIONS, BOUNDING_BOX } from "../constants";
 
 const {
   leftCheek,
@@ -23,7 +23,7 @@ export const initEyeDetection = async (video, canvas) => {
     maxFaces: 1,
     runtime: "mediapipe",
     refineLandmarks: true,
-    solutionPath: "https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh",
+    solutionPath: "https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh@0.4",
   };
 
   await tf.setBackend("webgl");
@@ -73,7 +73,7 @@ const isFaceRotated = (video) => {
 };
 
 export async function renderPrediction(video) {
-  const predictions = await detector.estimateFaces(video, true, true);
+  const predictions = await detector.estimateFaces(video);
 
   if (predictions) {
     detectIris(predictions);
@@ -84,10 +84,10 @@ export async function renderPrediction(video) {
         positionXLeftIris = keypoints[leftEyeIris[0]].x;
         positionYLeftIris = keypoints[leftEyeIris[0]].y;
 
-        const faceTopRightX = video.width - boundingBox.topLeft[0]; // -132.28
-        const faceTopRightY = boundingBox.topLeft[1]; // 145.26
-        const faceBottomLeftX = video.width - boundingBox.bottomRight[0]; // -349.75
-        const faceBottomLeftY = boundingBox.bottomRight[1]; // 308.36
+        const faceTopRightX = video.width - BOUNDING_BOX.topLeft[0]; // -132.28
+        const faceTopRightY = BOUNDING_BOX.topLeft[1]; // 145.26
+        const faceBottomLeftX = video.width - BOUNDING_BOX.bottomRight[0]; // -349.75
+        const faceBottomLeftY = BOUNDING_BOX.bottomRight[1]; // 308.36
 
         // console.log(
         //   faceTopRightX, // 407.72
@@ -122,7 +122,6 @@ export async function renderPrediction(video) {
             faceBottomLeftY,
           );
 
-          console.log(normalizedYIrisPosition);
           if (normalizedYIrisPosition > 0.95) {
             event = "TOP";
           }
