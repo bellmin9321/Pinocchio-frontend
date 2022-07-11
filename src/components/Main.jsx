@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import useStore from "../zustand/store";
 
 import WebcamScreen from "./WebcamScreen";
 import Question from "./Question";
 import WebcamButton from "./WebcamButton";
 import Loading from "./Loading";
 import { LOADING_DELAY } from "../constants";
+import ModalTerminate from "./ModalTerminate";
 
 function Main() {
   const [isQuestionStarted, setIsQuestionStarted] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const { showModal } = useStore();
 
   const generateLoadingTime = () =>
     setTimeout(() => {
@@ -32,6 +35,7 @@ function Main() {
             setIsQuestionStarted={setIsQuestionStarted}
           />
           <WebcamButton />
+          {showModal && <ModalTerminate />}
         </>
       )}
     </ContentBox>
