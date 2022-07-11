@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+
 import {
   QUESTION_INTERVAL,
   QUESTION_DELAY,
   QUESTION_COUNTDOWN,
   TOTAL_QUESTIONS,
 } from "../constants";
-import { useInterval } from "../helpers/useInterval";
+import { useInterval } from "../hooks/useInterval";
 import useStore from "../zustand/store";
+import ModalResult from "./ModalResult";
 
 function Question({ isQuestionStarted, setIsQuestionStarted }) {
   const { isWebcamOpen, questionList, randomQuestionList } = useStore();
@@ -44,6 +46,12 @@ function Question({ isQuestionStarted, setIsQuestionStarted }) {
     }
   }, [isQuestionStarted, time]);
 
+  useEffect(() => {
+    if (questionCount === TOTAL_QUESTIONS) {
+      useStore.setState({ modalSize: "LARGE" });
+    }
+  }, [questionCount]);
+
   return isWebcamOpen ? (
     isQuestionStarted ? (
       questionCount < TOTAL_QUESTIONS ? (
@@ -55,7 +63,7 @@ function Question({ isQuestionStarted, setIsQuestionStarted }) {
           <ProgressBox>진행률 {questionCount}0%</ProgressBox>
         </>
       ) : (
-        <></>
+        <ModalResult />
       )
     ) : (
       <QuestionStartBox onClick={() => setIsQuestionStarted(true)}>
