@@ -1,0 +1,11 @@
+Model Information:
+* title:	Wizard's hat
+* source:	https://sketchfab.com/3d-models/wizards-hat-68a9fb2dbd8442a5bacf9c0141320308
+* author:	Paulina (https://sketchfab.com/Byakko)
+
+Model License:
+* license type:	CC-BY-NC-4.0 (http://creativecommons.org/licenses/by-nc/4.0/)
+* requirements:	Author must be credited. No commercial use.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Wizard's hat" (https://sketchfab.com/3d-models/wizards-hat-68a9fb2dbd8442a5bacf9c0141320308) by Paulina (https://sketchfab.com/Byakko) licensed under CC-BY-NC-4.0 (http://creativecommons.org/licenses/by-nc/4.0/)
