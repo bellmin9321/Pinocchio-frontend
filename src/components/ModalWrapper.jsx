@@ -39,7 +39,7 @@ const ModalBoxSmall = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-color: #343433;
+  background-color: #1c6aaa;
   box-shadow: 0px 8px 30px;
   border-radius: 20px;
   z-index: 999999;
@@ -56,7 +56,7 @@ const ModalBoxLarge = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-color: #343433;
+  background-color: #0e4979;
   box-shadow: 0px 8px 30px;
   border-radius: 20px;
   z-index: 999999;
