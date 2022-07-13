@@ -34,13 +34,14 @@ const ModalContent = styled.div`
   z-index: 100;
   position: relative;
   color: white;
+  height: 80%;
 
   .mainText {
     display: flex;
     align-items: center;
     justify-content: center;
+    height: 60%;
     font-size: 35px;
-    padding-bottom: 40px;
   }
 
   .answerBox {
@@ -50,10 +51,11 @@ const ModalContent = styled.div`
     flex-direction: row;
     justify-content: space-between;
     font-size: 20px;
-    width: 30%;
+    width: 40%;
 
     div {
       cursor: pointer;
+      padding: 10px;
 
       :hover {
         opacity: 0.5;
@@ -61,4 +63,5 @@ const ModalContent = styled.div`
     }
   }
 `;
+
 export default ModalTerminate;
