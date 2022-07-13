@@ -1,16 +1,25 @@
-import React, { useEffect, useRef } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import Webcam from "react-webcam";
+
 import useStore from "../zustand/store";
 import { detectFaces, drawResults } from "../helpers/headDetection";
 import { initEyeDetection, renderPrediction } from "../helpers/eyeDetection";
 
 function WebcamScreen({ isQuestionStarted }) {
-  const { isWebcamOpen, isMuted, isMirrored } = useStore();
+  const { isWebcamOpen, isMuted, isMirrored, isQuestionDone, screenshotList } =
+    useStore();
   const webcamRef = useRef(null);
   const canvasRef = useRef(null);
   const video = webcamRef.current?.video;
   const canvas = canvasRef.current;
+
+  let CapturingLyingBehavior;
+
+  const capture = useCallback(() => {
+    const imageSrc = webcamRef.current.getScreenshot();
+    screenshotList.push(imageSrc);
+  }, [webcamRef]);
 
   const getFaces = async () => {
     try {
@@ -34,12 +43,20 @@ function WebcamScreen({ isQuestionStarted }) {
   };
 
   useEffect(() => {
-    if (webcamRef !== null && isQuestionStarted === true) {
+    if (
+      webcamRef !== null &&
+      isQuestionStarted === true &&
+      isQuestionDone === false
+    ) {
       initEyeDetection(video, canvas);
       const ticking = setInterval(async () => {
-        const result = await renderPrediction(video);
-        console.log(result);
+        CapturingLyingBehavior = await renderPrediction(video);
+        console.log(CapturingLyingBehavior);
         await getFaces();
+
+        if (screenshotList.length < 10) {
+          capture();
+        }
       }, 1000);
 
       return () => {
@@ -49,7 +66,7 @@ function WebcamScreen({ isQuestionStarted }) {
     } else {
       clearOverlay(canvasRef);
     }
-  }, [isQuestionStarted, isWebcamOpen]);
+  }, [isQuestionStarted, isWebcamOpen, isQuestionDone]);
 
   return (
     <WebcamLayout>
@@ -62,6 +79,7 @@ function WebcamScreen({ isQuestionStarted }) {
             width={"100%"}
             audio={isMuted}
             mirrored={isMirrored}
+            screenshotFormat="image/jpeg"
           />
           <Canvas ref={canvasRef} />
         </>

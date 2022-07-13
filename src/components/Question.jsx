@@ -48,7 +48,7 @@ function Question({ isQuestionStarted, setIsQuestionStarted }) {
 
   useEffect(() => {
     if (questionCount === TOTAL_QUESTIONS) {
-      useStore.setState({ modalSize: "LARGE" });
+      useStore.setState({ modalSize: "LARGE", isQuestionDone: true });
     }
   }, [questionCount]);
 
