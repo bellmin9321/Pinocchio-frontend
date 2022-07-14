@@ -2,6 +2,10 @@
   "name": "front-pinokio",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": "16.15.1",
+    "npm": "8.11.0"
+  },
   "dependencies": {
     "@react-three/drei": "^9.17.1",
     "@react-three/fiber": "^8.1.0",
@@ -33,7 +37,6 @@
     "start": "serve -s build",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject",
     "heroku-postbuild": "npm run build"
   },
   "eslintConfig": {
