@@ -8,22 +8,26 @@ import AnalysisResult from "./AnalysisResult";
 import NotFound from "./NotFound";
 import Home from "./Home";
 import AnalysisScreenshot from "./AnalysisScreenshot";
+import GlobalStyle from "./GlobalStyle";
 
 loadModels();
 
 function App() {
   return (
-    <AppLayout>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/main" element={<Main />} />
-          <Route path="/result" element={<AnalysisResult />} />
-          <Route path="/result/screenshot" element={<AnalysisScreenshot />} />
-          <Route element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </AppLayout>
+    <>
+      <GlobalStyle />
+      <AppLayout>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/main" element={<Main />} />
+            <Route path="/result" element={<AnalysisResult />} />
+            <Route path="/result/screenshot" element={<AnalysisScreenshot />} />
+            <Route element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </AppLayout>
+    </>
   );
 }
 
