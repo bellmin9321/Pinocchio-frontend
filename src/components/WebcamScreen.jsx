@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 import styled from "styled-components";
 import Webcam from "react-webcam";
 
@@ -81,7 +81,10 @@ function WebcamScreen({ isQuestionStarted }) {
             mirrored={isMirrored}
             screenshotFormat="image/jpeg"
           />
-          <Canvas ref={canvasRef} />
+          <Canvas
+            style={isMirrored ? { transform: "rotateY(180deg)" } : {}}
+            ref={canvasRef}
+          />
         </>
       ) : (
         <></>

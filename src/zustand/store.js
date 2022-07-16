@@ -5,7 +5,7 @@ import { QUESTION_LIST } from "../constants";
 const store = (set) => ({
   isMuted: false,
   isWebcamOpen: true,
-  isMirrored: false,
+  isMirrored: true,
   isQuestionDone: false,
   questionList,
   randomQuestionList: [],
