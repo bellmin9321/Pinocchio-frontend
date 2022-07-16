@@ -2,8 +2,8 @@
 export const QUESTION_INTERVAL = 5000;
 export const QUESTION_DELAY = 1000;
 export const QUESTION_COUNTDOWN = 1000;
-export const TOTAL_QUESTIONS = 1;
-export const LOADING_DELAY = 1;
+export const TOTAL_QUESTIONS = 10;
+export const LOADING_DELAY = 4000;
 
 export const QUESTION_LIST = [
   "나는 게이다",
@@ -15,7 +15,7 @@ export const QUESTION_LIST = [
   "내가 잘났다고 생각한다",
   "내가 잘생겼다고 생각한다",
   "코딩을 잘한다고 생각한다",
-  "바닐코딩에 온 걸 후회한다",
+  "바닐라코딩에 온 걸 후회한다",
   "머리를 긁고 냄새를 맡는다",
   "수영장에서 오줌 싼 적이 있다",
   "바닐라코딩에 좋아하는 사람이 있다",

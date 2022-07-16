@@ -6,7 +6,7 @@ module.exports = {
     jest: true,
     node: true, 
   },
-  ignorePatterns: ["node_modules/", ".eslintrc.*", "package.json"],
+  ignorePatterns: ["node_modules/", ".eslintrc.*", "package.json", "dist/", "helpers/"],
   extends: [
     "eslint:recommended",
     "plugin:react/recommended",
