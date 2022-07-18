@@ -55,6 +55,7 @@ const WebcamButtonLayout = styled.nav`
   justify-content: space-around;
   width: 25%;
   height: 10%;
+  z-index: 15;
 
   .end {
     width: 60px;

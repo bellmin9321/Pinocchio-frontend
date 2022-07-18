@@ -31,11 +31,6 @@ export const initEyeDetection = async (video, canvas) => {
   detector = await faceLandmarksDetection.createDetector(model, detectorConfig);
 
   if (video && canvas) {
-    const videoWidth = video.videoWidth;
-    const videoHeight = video.videoHeight;
-    video.width = videoWidth;
-    video.height = videoHeight;
-
     canvas.width = video.width;
     canvas.height = video.heigth;
     ctx = canvas.getContext("2d");
@@ -84,17 +79,10 @@ export async function renderPrediction(video) {
         positionXLeftIris = keypoints[leftEyeIris[0]].x;
         positionYLeftIris = keypoints[leftEyeIris[0]].y;
 
-        const faceTopRightX = video.width - BOUNDING_BOX.topLeft[0]; // -132.28
-        const faceTopRightY = BOUNDING_BOX.topLeft[1]; // 145.26
-        const faceBottomLeftX = video.width - BOUNDING_BOX.bottomRight[0]; // -349.75
-        const faceBottomLeftY = BOUNDING_BOX.bottomRight[1]; // 308.36
-
-        // console.log(
-        //   faceTopRightX, // 407.72
-        //   faceTopRightY, // 145.26
-        //   faceBottomLeftX, // 190.25
-        //   faceBottomLeftY, // 308.36
-        // );
+        const faceTopRightX = video.width - BOUNDING_BOX.topLeft[0];
+        const faceTopRightY = BOUNDING_BOX.topLeft[1];
+        const faceBottomLeftX = video.width - BOUNDING_BOX.bottomRight[0];
+        const faceBottomLeftY = BOUNDING_BOX.bottomRight[1];
 
         if (faceBottomLeftX > 0 && !isFaceRotated(video)) {
           const positionLeftIrisX = video.width - positionXLeftIris;

@@ -1,14 +1,12 @@
-/*
-  Helper for Three.js
-*/
+/*eslint-disable*/
 import { JEELIZFACEFILTER } from "facefilter";
 import * as THREE from "three";
 
-export const JeelizThreeHelper = (function(){
+export const JeelizThreeHelper = (() => {
   // internal settings:
   const _settings = {
     rotationOffsetX: 0.0, // negative -> look upper. in radians
-    pivotOffsetYZ: [0.2, 0.6],// YZ of the distance between the center of the cube and the pivotㅠ
+    pivotOffsetYZ: [0.2, 0.6],// YZ of the distance between the center of the cube and the pivot
     
     detectionThreshold: 0.8, // sensibility, between 0 and 1. Less -> more sensitive
     detectionHysteresis: 0.02,
@@ -47,7 +45,7 @@ export const JeelizThreeHelper = (function(){
 
 
   // private funcs:
-  function destroy(){
+  function destroy() {
     _isVideoTextureReady = false;
     _threeCompositeObjects.splice(0);
     if (_threeVideoTexture){
@@ -89,7 +87,7 @@ export const JeelizThreeHelper = (function(){
         }";
 
     if (_isSeparateThreeCanvas){
-      const compile_shader = function(source, type, typeString) {
+      const compile_shader = (source, type, typeString) => {
         const glShader = _gl.createShader(type);
         _gl.shaderSource(glShader, source);
         _gl.compileShader(glShader);
@@ -100,16 +98,16 @@ export const JeelizThreeHelper = (function(){
         return glShader;
       };
 
-      const glShaderVertex =   compile_shader(videoScreenVertexShaderSource, _gl.VERTEX_SHADER, 'VERTEX');
-      const glShaderFragment = compile_shader(videoScreenFragmentShaderSource, _gl.FRAGMENT_SHADER, 'FRAGMENT');
+      const glShaderVertex =   compile_shader(videoScreenVertexShaderSource, _gl.VERTEX_SHADER, "VERTEX");
+      const glShaderFragment = compile_shader(videoScreenFragmentShaderSource, _gl.FRAGMENT_SHADER, "FRAGMENT");
 
       _glShpCopyCut = _gl.createProgram();
       _gl.attachShader(_glShpCopyCut, glShaderVertex);
       _gl.attachShader(_glShpCopyCut, glShaderFragment);
 
       _gl.linkProgram(_glShpCopyCut);
-      const samplerVideo = _gl.getUniformLocation(_glShpCopyCut, 'samplerVideo');
-      _glShpCopyCutVideoMatUniformPointer = _gl.getUniformLocation(_glShpCopyCut, 'videoTransformMat2');
+      const samplerVideo = _gl.getUniformLocation(_glShpCopyCut, "samplerVideo");
+      _glShpCopyCutVideoMatUniformPointer = _gl.getUniformLocation(_glShpCopyCut, "videoTransformMat2");
       
       return;
     }
@@ -136,18 +134,18 @@ export const JeelizThreeHelper = (function(){
     const videoScreenCorners = new Float32Array([-1,-1,   1,-1,   1,1,   -1,1]);
     // handle both new and old THREE.js versions:
     const setVideoGeomAttribute = (videoGeometry.setAttribute || videoGeometry.addAttribute).bind(videoGeometry);
-    setVideoGeomAttribute( 'position', new THREE.BufferAttribute( videoScreenCorners, 2 ) );
+    setVideoGeomAttribute( "position", new THREE.BufferAttribute( videoScreenCorners, 2 ) );
     videoGeometry.setIndex(new THREE.BufferAttribute(new Uint16Array([0,1,2, 0,2,3]), 1));
     _threeVideoMesh = new THREE.Mesh(videoGeometry, videoMaterial);
     that.apply_videoTexture(_threeVideoMesh);
     _threeVideoMesh.renderOrder = -1000; // render first
     _threeVideoMesh.frustumCulled = false;
     _threeScene.add(_threeVideoMesh);
-  } //end create_videoScreen()
+  } //end create_videoScreen()d
 
 
   function detect(detectState){
-    _threeCompositeObjects.forEach(function(threeCompositeObject, i){
+    _threeCompositeObjects.forEach((threeCompositeObject, i) => {
       _isDetected = threeCompositeObject.visible;
       const ds = detectState[i];
       if (_isDetected && ds.detected < _settings.detectionThreshold-_settings.detectionHysteresis){
@@ -169,7 +167,7 @@ export const JeelizThreeHelper = (function(){
     // tan( <horizontal FoV> / 2 ):
     const halfTanFOVX = Math.tan(threeCamera.aspect * threeCamera.fov * Math.PI/360); //tan(<horizontal FoV>/2), in radians (threeCamera.fov is vertical FoV)
 
-    _threeCompositeObjects.forEach(function(threeCompositeObject, i){
+    _threeCompositeObjects.forEach((threeCompositeObject, i) => {
       if (!threeCompositeObject.visible) return;
       const detectState = ds[i];
 
@@ -212,7 +210,7 @@ export const JeelizThreeHelper = (function(){
   //public methods:
   const that = {
     // launched with the same spec object than callbackReady. set spec.threeCanvasId to the ID of the threeCanvas to be in 2 canvas mode:
-    init: function(spec, detectCallback){
+    init: (spec, detectCallback) => {
       destroy();
 
       _maxFaces = spec.maxFacesDetected;
@@ -229,13 +227,13 @@ export const JeelizThreeHelper = (function(){
         _isSeparateThreeCanvas = true;
         // adjust the threejs canvas size to the threejs canvas:
         threeCanvas = document.getElementById(spec.threeCanvasId);
-        threeCanvas.setAttribute('width', _faceFilterCv.width);
-        threeCanvas.setAttribute('height', _faceFilterCv.height);
+        threeCanvas.setAttribute("width", _faceFilterCv.width);
+        threeCanvas.setAttribute("height", _faceFilterCv.height);
       } else {
         threeCanvas = _faceFilterCv;
       }
 
-      if (typeof(detectCallback) !== 'undefined'){
+      if (typeof(detectCallback) !== "undefined"){
         _detectCallback = detectCallback;
       }
 
@@ -254,8 +252,8 @@ export const JeelizThreeHelper = (function(){
       create_videoScreen();
 
       // handle device orientation change:
-      window.addEventListener('orientationchange', function(){
-        setTimeout(JEELIZFACEFILTER.resize, 1000);
+      window.addEventListener("orientationchange", () => {
+        setTimeout(JEELIZFACEFILTER.resize, 100);
       }, false);
 
       
@@ -264,6 +262,7 @@ export const JeelizThreeHelper = (function(){
         renderer: _threeRenderer,
         scene: _threeScene
       };
+
       if (_isMultiFaces){
         returnedDict.faceObjects = _threeCompositeObjects
       } else {
@@ -271,10 +270,10 @@ export const JeelizThreeHelper = (function(){
       }
 
       return returnedDict;
-    }, //end that.init()
+    },
 
 
-    detect: function(detectState){
+    detect: (detectState) => {
       const ds = (_isMultiFaces) ? detectState : [detectState];
 
       // update detection states:
@@ -282,12 +281,12 @@ export const JeelizThreeHelper = (function(){
     },
 
 
-    get_isDetected: function() {
+    get_isDetected: () => {
       return _isDetected;
     },
 
 
-    render: function(detectState, threeCamera){
+    render: (detectState, threeCamera) => {
       const ds = (_isMultiFaces) ? detectState : [detectState];
 
       // update detection states then poses:
@@ -314,7 +313,7 @@ export const JeelizThreeHelper = (function(){
     },
 
 
-    sortFaces: function(bufferGeometry, axis, isInv){ // sort faces long an axis
+    sortFaces: (bufferGeometry, axis, isInv) => { // sort faces long an axis
       // Useful when a bufferGeometry has alpha: we should render the last faces first
       const axisOffset = {X:0, Y:1, Z:2}[axis.toUpperCase()];
       const sortWay = (isInv) ? -1 : 1;
@@ -328,7 +327,7 @@ export const JeelizThreeHelper = (function(){
 
       // compute centroids:
       const aPos = bufferGeometry.attributes.position.array;
-      const centroids = faces.map(function(face, faceIndex){
+      const centroids = faces.map((face, faceIndex) => {
         return [
           (aPos[3*face[0]]+aPos[3*face[1]]+aPos[3*face[2]])/3,       // X
           (aPos[3*face[0]+1]+aPos[3*face[1]+1]+aPos[3*face[2]+1])/3, // Y
@@ -338,12 +337,12 @@ export const JeelizThreeHelper = (function(){
       });
 
       // sort centroids:
-      centroids.sort(function(ca, cb){
+      centroids.sort((ca, cb) => {
         return (ca[axisOffset]-cb[axisOffset]) * sortWay;
       });
 
       // reorder bufferGeometry faces:
-      centroids.forEach(function(centroid, centroidIndex){
+      centroids.forEach((centroid, centroidIndex) => {
         const face = centroid[3];
         bufferGeometry.index.array[3*centroidIndex] = face[0];
         bufferGeometry.index.array[3*centroidIndex+1] = face[1];
@@ -352,24 +351,24 @@ export const JeelizThreeHelper = (function(){
     }, //end sortFaces
 
 
-    get_threeVideoTexture: function(){
+    get_threeVideoTexture: () => {
       return _threeVideoTexture;
     },
 
 
-    apply_videoTexture: function(threeMesh){
+    apply_videoTexture: (threeMesh) => {
       if (_isVideoTextureReady){
         return;
       }
-      threeMesh.onAfterRender = function(){
+      threeMesh.onAfterRender = () => {
         // Replace _threeVideoTexture.__webglTexture by the real video texture:
         try {
-          _threeRenderer.properties.update(_threeVideoTexture, '__webglTexture', _glVideoTexture);
+          _threeRenderer.properties.update(_threeVideoTexture, "__webglTexture", _glVideoTexture);
           _threeVideoTexture.magFilter = THREE.LinearFilter;
           _threeVideoTexture.minFilter = THREE.LinearFilter;
           _isVideoTextureReady = true;
         } catch(e){
-          console.log('WARNING in JeelizThreeHelper: the glVideoTexture is not fully initialized');
+          console.log("WARNING in JeelizThreeHelper: the glVideoTexture is not fully initialized");
         }
         delete(threeMesh.onAfterRender);
       };
@@ -379,7 +378,7 @@ export const JeelizThreeHelper = (function(){
     // create an occluder, IE a transparent object which writes on the depth buffer:
     create_threejsOccluder: function(occluderURL, callback){
       const occluderMesh = new THREE.Mesh();
-      new THREE.BufferGeometryLoader().load(occluderURL, function(occluderGeometry){
+      new THREE.BufferGeometryLoader().load(occluderURL, (occluderGeometry) =>{
         const mat = new THREE.ShaderMaterial({
           vertexShader: THREE.ShaderLib.basic.vertexShader,
           fragmentShader: "precision lowp float;\n void main(void){\n gl_FragColor=vec4(1.,0.,0.,1.);\n }",
@@ -390,7 +389,7 @@ export const JeelizThreeHelper = (function(){
         occluderMesh.renderOrder = -1; //render first
         occluderMesh.material = mat;
         occluderMesh.geometry = occluderGeometry;
-        if (typeof(callback)!=='undefined' && callback) callback(occluderMesh);
+        if (typeof(callback)!=="undefined" && callback) callback(occluderMesh);
       });
       return occluderMesh;
     },
@@ -402,7 +401,7 @@ export const JeelizThreeHelper = (function(){
 
 
     create_camera: function(zNear, zFar){
-      const threeCamera = new THREE.PerspectiveCamera(1, 1, (zNear) ? zNear : 0.1, (zFar) ? zFar : 100);
+      const threeCamera = new THREE.PerspectiveCamera(1, 1, (zNear) ? zNear : 0.1, (zFar) ? zFar : 1000);
       threeCamera.position.set(0,0,1)
       that.update_camera(threeCamera);
 
@@ -423,7 +422,7 @@ export const JeelizThreeHelper = (function(){
       const videoAspectRatio = vw / vh;
       const fovFactor = (vh > vw) ? (1.0 / videoAspectRatio) : 1.0;
       const fov = _settings.cameraMinVideoDimFov * fovFactor;
-      console.log('INFO in JeelizThreeHelper - update_camera(): Estimated vertical video FoV is', fov);
+      console.log("update_camera(): Estimated vertical video FoV is", fov);
       
       // compute X and Y offsets in pixels:
       let scale = 1.0;
@@ -442,7 +441,7 @@ export const JeelizThreeHelper = (function(){
       // apply parameters:
       threeCamera.aspect = _canvasAspectRatio;
       threeCamera.fov = fov;
-      console.log('INFO in JeelizThreeHelper.update_camera(): camera vertical estimated FoV is', fov, 'deg');
+      console.log("update_camera(): camera vertical estimated FoV is", fov, "deg");
       threeCamera.setViewOffset(cvws, cvhs, offsetX, offsetY, cvw, cvh);
       threeCamera.updateProjectionMatrix();
 
@@ -461,14 +460,6 @@ export const JeelizThreeHelper = (function(){
       }
     }
   }
+
   return that;
 })();
-
-
-// Export ES6 module:
-try {
-  module.exports = JeelizThreeHelper;
-} catch(e){
-  console.log('JeelizThreeHelper ES6 Module not exported');  
-  window.JeelizThreeHelper = JeelizThreeHelper;
-}

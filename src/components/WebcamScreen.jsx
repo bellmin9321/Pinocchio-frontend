@@ -5,10 +5,17 @@ import Webcam from "react-webcam";
 import useStore from "../zustand/store";
 import { detectFaces, drawResults } from "../helpers/headDetection";
 import { initEyeDetection, renderPrediction } from "../helpers/eyeDetection";
+import FaceFilter from "./FaceFilter";
 
 function WebcamScreen({ isQuestionStarted }) {
-  const { isWebcamOpen, isMuted, isMirrored, isQuestionDone, screenshotList } =
-    useStore();
+  const {
+    isWebcamOpen,
+    isMuted,
+    isMirrored,
+    isQuestionDone,
+    screenshotList,
+    questionCount,
+  } = useStore();
   const webcamRef = useRef(null);
   const canvasRef = useRef(null);
   const video = webcamRef.current?.video;
@@ -74,9 +81,6 @@ function WebcamScreen({ isQuestionStarted }) {
         <>
           <Webcam
             ref={webcamRef}
-            className="video"
-            height={"100%"}
-            width={"100%"}
             audio={isMuted}
             mirrored={isMirrored}
             screenshotFormat="image/jpeg"
@@ -85,6 +89,7 @@ function WebcamScreen({ isQuestionStarted }) {
             style={isMirrored ? { transform: "rotateY(180deg)" } : {}}
             ref={canvasRef}
           />
+          {questionCount > 0 ? <FaceFilter /> : <></>}
         </>
       ) : (
         <></>
@@ -99,6 +104,11 @@ const WebcamLayout = styled.div`
   justify-content: center;
   height: 100%;
   background-color: #181717;
+
+  video {
+    /* width: 100%; */
+    height: 100%;
+  }
 `;
 
 const Canvas = styled.canvas`

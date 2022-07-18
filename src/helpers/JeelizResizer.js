@@ -1,3 +1,4 @@
+/*eslint-disable*/
 /*
 This helper can help for:
 * adjusting the canvas resolution to the good size -> this is crucial to
@@ -14,7 +15,7 @@ to balance between performance and quality
 
 import { JEELIZFACEFILTER } from "facefilter";
 
-export const JeelizResizer = (function(){
+export const JeelizResizer = (() => {
   // private vars:
   let _domCanvas = null,
       _whCanvasPx = null,
@@ -41,7 +42,7 @@ export const JeelizResizer = (function(){
   function add_CSStransform(domElement, CSS){
     const CSStransform = domElement.style.transform;
     if (CSStransform.indexOf(CSS) !== -1) return;
-    domElement.style.transform = CSS + ' ' + CSStransform;
+    domElement.style.transform = CSS + " " + CSStransform;
   }
 
   // Compute overlap between 2 rectangles A and B
@@ -87,13 +88,13 @@ export const JeelizResizer = (function(){
     ];
 
     // set canvas resolution:
-    _domCanvas.setAttribute('width',  _whCanvasPx[0]);
-    _domCanvas.setAttribute('height', _whCanvasPx[1]);
+    _domCanvas.setAttribute("width",  _whCanvasPx[0]);
+    _domCanvas.setAttribute("height", _whCanvasPx[1]);
 
     // canvas display size:
     if (_isApplyCSS){
-      _domCanvas.style.width = width.toString() + 'px';
-      _domCanvas.style.height = height.toString() + 'px';
+      _domCanvas.style.width = width.toString() + "px";
+      _domCanvas.style.height = height.toString() + "px";
     }
   }
 
@@ -107,7 +108,7 @@ export const JeelizResizer = (function(){
   }
 
   function resize_canvasToFullScreen(){
-    const wh = [window['innerWidth'], window['innerHeight']];
+    const wh = [window["innerWidth"], window["innerHeight"]];
     if (_isInvFullscreenWH){
       wh.reverse();
     }
@@ -127,48 +128,48 @@ export const JeelizResizer = (function(){
   const that = {
     // return true or false if the device is in portrait or landscape mode
     // see https://stackoverflow.com/questions/4917664/detect-viewport-orientation-if-orientation-is-portrait-display-alert-message-ad
-    is_portrait: function(){
+    is_portrait: () => {
       try{
-        if (window['matchMedia']("(orientation: portrait)")['matches']){
+        if (window["matchMedia"]("(orientation: portrait)")["matches"]){
           return true;
         } else {
           return false;
         }
       } catch(e){
-        return (window['innerHeight'] > window['innerWidth']);
+        return (window["innerHeight"] > window["innerWidth"]);
       }
     },
 
     // check whether the user is using IOS or not
     // see https://stackoverflow.com/questions/9038625/detect-if-device-is-ios
-    check_isIOS: function(){
-      const isIOS = /iPad|iPhone|iPod/.test(navigator['userAgent']) && !window['MSStream'];
+    check_isIOS: () => {
+      const isIOS = /iPad|iPhone|iPod/.test(navigator["userAgent"]) && !window["MSStream"];
       return isIOS;
     },
 
     // Should be called only if IOS was detected
     // see https://stackoverflow.com/questions/8348139/detect-ios-version-less-than-5-with-javascript
-    get_IOSVersion: function(){ 
-      const v = (navigator['appVersion']).match(/OS (\d+)_(\d+)_?(\d+)?/);
+    get_IOSVersion: () => { 
+      const v = (navigator["appVersion"]).match(/OS (\d+)_(\d+)_?(\d+)?/);
       return (v.length > 2) ? [parseInt(v[1], 10), parseInt(v[2], 10), parseInt(v[3] || 0, 10)] : [0, 0, 0];
     },
 
     // Check whether the user is using Android or not
     // see https://stackoverflow.com/questions/6031412/detect-android-phone-via-javascript-jquery
-    check_isAndroid: function(){
-      const ua = navigator['userAgent'].toLowerCase();
-      return (ua.indexOf('android') !== -1);
+    check_isAndroid: () => {
+      const ua = navigator["userAgent"].toLowerCase();
+      return (ua.indexOf("android") !== -1);
     },
 
     // Should be called only if Android was detected
     // see https://stackoverflow.com/questions/7184573/pick-up-the-android-version-in-the-browser-by-javascript
-    get_androidVersion: function(){
-      const ua = navigator['userAgent'].toLowerCase(); 
+    get_androidVersion: () => {
+      const ua = navigator["userAgent"].toLowerCase(); 
       const match = ua.match(/android\s([0-9\.]*)/i);
       if (!match || match.length<2){
         return [0,0,0];
       }
-      const v = match[1].split('.');
+      const v = match[1].split(".");
       return [
         parseInt(v[0], 10),
         parseInt(v[1], 10),
@@ -181,7 +182,7 @@ export const JeelizResizer = (function(){
     // should require a 480x640 video (Chrome, Firefox)
     // but bad implementations needs to always request landscape resolutions (so 640x480)
     // see https://github.com/jeeliz/jeelizFaceFilter/issues/144
-    require_flipVideoWHIfPortrait: function(){
+    require_flipVideoWHIfPortrait: () => {
       // disabled because of https://github.com/jeeliz/jeelizFaceFilter/issues/144
       // seems quite a mess though...
       
@@ -221,9 +222,9 @@ export const JeelizResizer = (function(){
     //  - <function> onResize: function called when the window is resized. Only enabled if isFullScreen = true
     //  - <boolean> isInvWH: if we should invert width and height for fullscreen mode only. default = false
     //  - <boolean> isApplyCSS: if we should also apply canvas dimensions as CSS. default = false
-    size_canvas: function(optionsArg){
+    size_canvas: (optionsArg) => {
       const options = Object.assign({
-        canvasId: 'undefinedCanvasId',
+        canvasId: "undefinedCanvasId",
         canvas: null,
         overSamplingFactor: window.devicePixelRatio || 1,
 
@@ -233,7 +234,7 @@ export const JeelizResizer = (function(){
         isApplyCSS: false,
         
         onResize: null,
-        callback: function(){}
+        callback: () => {}
       }, optionsArg);
 
       _domCanvas = (options.canvas) ? options.canvas : document.getElementById(options.canvasId);
@@ -247,17 +248,17 @@ export const JeelizResizer = (function(){
         _callbackResize = options.onResize;
         
         resize_canvasToFullScreen();
-        window.addEventListener('resize', on_windowResize, false);
-        window.addEventListener('orientationchange', on_windowResize, false);
+        window.addEventListener("resize", on_windowResize, false);
+        window.addEventListener("orientationchange", on_windowResize, false);
         
       } else { // not fullscreen mode
 
         // get display size of the canvas:
         const domRect = _domCanvas.getBoundingClientRect();
         if (domRect.width===0 || domRect.height===0){
-          console.log('WARNING in JeelizResize.size_canvas(): the canvas has its width or its height null, Retry a bit later...');
+          console.log("WARNING in JeelizResize.size_canvas(): the canvas has its width or its height null, Retry a bit later...");
           if (++_resizeAttemptsCounter > 20){
-            options.callback('CANNOT_RESIZECANVAS');
+            options.callback("CANNOT_RESIZECANVAS");
             return;
           }
           setTimeout(that.size_canvas.bind(null, options), 50);
@@ -271,34 +272,34 @@ export const JeelizResizer = (function(){
 
       // flip horizontally if required:
       if (options.CSSFlipX){
-        add_CSStransform(_domCanvas, 'rotateY(180deg)');
+        add_CSStransform(_domCanvas, "rotateY(180deg)");
       }
 
       // compute the best camera resolutions:
-      const allResolutions = _cameraResolutions.map(function(x){
+      const allResolutions = _cameraResolutions.map((x) => {
         return x.slice(0)
       });
 
       // if we are in portrait mode, the camera is also in portrait mode
       // so we need to set all resolutions to portrait mode
       if (that.is_portrait() && that.require_flipVideoWHIfPortrait()){
-        allResolutions.forEach(function(wh){
+        allResolutions.forEach((wh) => {
           wh.reverse();
         });
       }
 
       // sort camera resolutions from the best to the worst:
-      allResolutions.sort(function(resA, resB){
+      allResolutions.sort((resA, resB) => {
         return compute_overlap(resB, _whCanvasPx) - compute_overlap(resA, _whCanvasPx);        
       });
 
       // pick the best camera resolution:
       const bestCameraResolution = {
-        'idealWidth':  allResolutions[0][0],
-        'idealHeight': allResolutions[0][1]
+        "idealWidth":  allResolutions[0][0],
+        "idealHeight": allResolutions[0][1]
       };
 
-      console.log('INFO in JeelizResizer: bestCameraResolution =', bestCameraResolution);
+      console.log("INFO in JeelizResizer: bestCameraResolution =", bestCameraResolution);
 
       // launch the callback function after a small interval to let it
       // some time to size:
@@ -306,7 +307,7 @@ export const JeelizResizer = (function(){
     }, //end size_canvas()
 
     // Should be called if the canvas is resized to update the canvas resolution:
-    resize_canvas: function(){
+    resize_canvas: () => {
       if (_isFullScreen){
         resize_canvasToFullScreen()        
       } else {
@@ -314,7 +315,7 @@ export const JeelizResizer = (function(){
       }
     },
 
-    get_canvasSize: function(){
+    get_canvasSize: () => {
       return _whCanvasPx;
     }
   }; //end that
@@ -325,6 +326,6 @@ export const JeelizResizer = (function(){
 try {
   module.exports = JeelizResizer;
 } catch(e){
-  console.log('JeelizResizer ES6 Module not exported');
+  console.log("JeelizResizer ES6 Module not exported");
   window.JeelizResizer = JeelizResizer;
 }
