@@ -2,6 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
+import useStore from "../zustand/store";
 import ModalWrapper from "./ModalWrapper";
 
 function ModalResult() {
@@ -16,6 +17,9 @@ function ModalResult() {
         <button
           onClick={() => {
             navigate("/result");
+            useStore.setState({
+              questionCount: 0,
+            });
           }}
         >
           분석결과

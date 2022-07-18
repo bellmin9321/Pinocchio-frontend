@@ -12,6 +12,7 @@ const store = (set) => ({
   showModal: false,
   modalSize: "SMALL",
   screenshotList: [],
+  questionCount: 0,
 
   toggleIsMuted: () => set((state) => ({ isMuted: !state.isMuted })),
   toggleIsWebcamOpen: () =>
