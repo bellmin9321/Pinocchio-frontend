@@ -12,9 +12,9 @@ import useStore from "../zustand/store";
 import ModalResult from "./ModalResult";
 
 function Question({ isQuestionStarted, setIsQuestionStarted }) {
-  const { isWebcamOpen, questionList, randomQuestionList } = useStore();
+  const { isWebcamOpen, questionList, randomQuestionList, questionCount } =
+    useStore();
   const [time, setTime] = useState(5);
-  const [questionCount, setQuestionCount] = useState(0);
 
   useEffect(() => {
     while (randomQuestionList.length < TOTAL_QUESTIONS) {
@@ -31,7 +31,7 @@ function Question({ isQuestionStarted, setIsQuestionStarted }) {
     () => {
       if (questionCount < TOTAL_QUESTIONS && isQuestionStarted === true) {
         setTimeout(() => {
-          setQuestionCount(questionCount + 1);
+          useStore.setState({ questionCount: questionCount + 1 });
           setTime(5);
         }, QUESTION_DELAY);
       }
@@ -48,7 +48,10 @@ function Question({ isQuestionStarted, setIsQuestionStarted }) {
 
   useEffect(() => {
     if (questionCount === TOTAL_QUESTIONS) {
-      useStore.setState({ modalSize: "LARGE", isQuestionDone: true });
+      useStore.setState({
+        modalSize: "LARGE",
+        isQuestionDone: true,
+      });
     }
   }, [questionCount]);
 
@@ -86,6 +89,7 @@ const QuestionStartBox = styled.div`
   background-color: white;
   font-size: 40px;
   border-radius: 15px;
+  z-index: 15;
 
   :hover {
     cursor: pointer;
@@ -104,6 +108,7 @@ const QuestionBox = styled.div`
   padding: 0 20px;
   font-size: 40px;
   border-radius: 15px;
+  z-index: 15;
 
   .question {
     display: flex;
@@ -134,12 +139,13 @@ const ProgressBox = styled.div`
   align-items: center;
   top: 5%;
   right: 15%;
-  width: 13%;
+  width: 15%;
   background-color: white;
   color: black;
   padding: 20px;
   font-size: 35px;
   border-radius: 15px;
+  z-index: 15;
 `;
 
 export default Question;
