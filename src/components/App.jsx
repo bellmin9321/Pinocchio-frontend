@@ -23,7 +23,7 @@ function App() {
             <Route path="/main" element={<Main />} />
             <Route path="/result" element={<AnalysisResult />} />
             <Route path="/result/screenshot" element={<AnalysisScreenshot />} />
-            <Route element={<NotFound />} />
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
       </AppLayout>
