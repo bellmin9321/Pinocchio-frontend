@@ -14,6 +14,11 @@ const GlobalStyle = createGlobalStyle`
       #000000 100%
     );
   }
+
+  @font-face {
+    font-family: "Rocher";
+    src: url(https://assets.codepen.io/9632/RocherColorGX.woff2);
+  }
 `;
 
 export default GlobalStyle;
