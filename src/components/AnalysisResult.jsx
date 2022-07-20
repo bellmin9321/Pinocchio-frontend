@@ -6,10 +6,14 @@ import useStore from "../zustand/store";
 
 const AnalysisResult = () => {
   const navigate = useNavigate();
-  const { screenshotList } = useStore();
+  const { screenshotList, lieCount } = useStore();
 
   const initializeScreenshotList = () => {
-    useStore.setState({ screenshotList: [], isQuestionDone: false });
+    useStore.setState({
+      screenshotList: [],
+      isQuestionDone: false,
+      lieCount: 0,
+    });
     navigate("/main");
   };
 
@@ -24,9 +28,9 @@ const AnalysisResult = () => {
         </header>
         <section>
           <InformationBox>
-            <p>거짓말 포착횟수: 8번</p>
+            <p>거짓말 포착횟수: {lieCount}번</p>
             <p>최다 포착 부위: 눈</p>
-            <p>코길이: 36.7cm</p>
+            <p>코길이: {(lieCount + 1) * 4.08}cm</p>
           </InformationBox>
           <ScreenshotBox>
             {screenshotList.length ? (
@@ -42,12 +46,10 @@ const AnalysisResult = () => {
                 ))}
               </>
             ) : (
-              <Screenshot
-                onClick={() => navigate("/result/screenshot")}
-                height={"70%"}
-                width={"83%"}
-                src="image/pinokio.gif"
-              />
+              <HonestBox>
+                <img height={"100%"} width={"100%"} src="image/good.png" />
+                <div>YOU ARE HONEST</div>
+              </HonestBox>
             )}
           </ScreenshotBox>
         </section>
@@ -128,7 +130,6 @@ const InformationBox = styled.div`
 const ScreenshotBox = styled.div`
   display: flex;
   align-items: center;
-  justify-content: center;
   justify-content: space-between;
   flex-wrap: wrap;
   cursor: pointer;
@@ -138,9 +139,29 @@ const ScreenshotBox = styled.div`
   height: 100%;
   width: 49%;
   border-radius: 10px;
+`;
 
-  :hover {
-    opacity: 0.8;
+const HonestBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 90%;
+  height: 90%;
+  margin: auto;
+
+  img {
+    border-radius: 15px;
+
+    :hover {
+      transform: scale(1.05);
+      transition: 300ms ease-in;
+    }
+  }
+
+  div {
+    font-family: "Rocher";
+    margin-top: 12px;
   }
 `;
 
