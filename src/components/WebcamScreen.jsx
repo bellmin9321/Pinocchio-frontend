@@ -3,9 +3,12 @@ import styled from "styled-components";
 import Webcam from "react-webcam";
 
 import useStore from "../zustand/store";
-import { detectFaces, drawResults } from "../helpers/headDetection";
-import { initEyeDetection, renderPrediction } from "../helpers/eyeDetection";
+import {
+  loadFaceLandmarksDetection,
+  detectLies,
+} from "../helpers/FaceLandmarksDetectionHelper.js";
 import FaceFilter from "./FaceFilter";
+import { DETECT_INTERVAL } from "../constants";
 
 function WebcamScreen({ isQuestionStarted }) {
   const {
@@ -14,40 +17,21 @@ function WebcamScreen({ isQuestionStarted }) {
     isMirrored,
     isQuestionDone,
     screenshotList,
-    questionCount,
+    lieCount,
   } = useStore();
   const webcamRef = useRef(null);
   const canvasRef = useRef(null);
   const video = webcamRef.current?.video;
   const canvas = canvasRef.current;
 
-  let CapturingLyingBehavior;
+  let detectedLyingBehavior;
+  let faceRotateCount = 0;
+  let eyesGazeCount = 0;
 
   const capture = useCallback(() => {
     const imageSrc = webcamRef.current.getScreenshot();
     screenshotList.push(imageSrc);
   }, [webcamRef]);
-
-  const getFaces = async () => {
-    try {
-      if (webcamRef.current !== null) {
-        const faces = await detectFaces(video);
-        await drawResults(video, canvas, faces, "landmarks");
-      } else {
-        return;
-      }
-    } catch (error) {
-      console.log("얼굴 인식이 되지 않고 있음");
-    }
-  };
-
-  const clearOverlay = (canvas) => {
-    const ctx = canvasRef.current?.getContext("2d");
-
-    if (ctx) {
-      ctx.clearRect(0, 0, canvas?.width, canvas?.height);
-    }
-  };
 
   useEffect(() => {
     if (
@@ -55,25 +39,57 @@ function WebcamScreen({ isQuestionStarted }) {
       isQuestionStarted === true &&
       isQuestionDone === false
     ) {
-      initEyeDetection(video, canvas);
-      const ticking = setInterval(async () => {
-        CapturingLyingBehavior = await renderPrediction(video);
-        console.log(CapturingLyingBehavior);
-        await getFaces();
+      loadFaceLandmarksDetection(video, canvas);
 
-        if (screenshotList.length < 10) {
+      const ticking = setInterval(async () => {
+        detectedLyingBehavior = await detectLies(video);
+
+        // 얼굴 돌리기 & 머리 기울이기 탐지
+        if (
+          detectedLyingBehavior?.HEAD_STATE === "LEFT" ||
+          detectedLyingBehavior?.HEAD_STATE === "RIGHT"
+        ) {
+          faceRotateCount++;
+
+          if (faceRotateCount >= 5) {
+            useStore.setState((state) => ({ lieCount: state.lieCount + 1 }));
+
+            capture();
+          }
+        }
+
+        // 눈 흘겨보기 탐지
+        if (
+          detectedLyingBehavior?.EYES_GAZING === "LEFT" ||
+          detectedLyingBehavior?.EYES_GAZING === "RIGHT"
+        ) {
+          eyesGazeCount++;
+
+          if (eyesGazeCount > 1) {
+            useStore.setState((state) => ({ lieCount: state.lieCount + 1 }));
+
+            capture();
+          }
+        }
+      }, DETECT_INTERVAL);
+
+      // 눈 깜빡임 탐지
+      const detectBlinkingEyes = setInterval(() => {
+        if (detectedLyingBehavior?.EYES_BLINKING > 2) {
+          useStore.setState((state) => ({ lieCount: state.lieCount + 1 }));
+
           capture();
         }
-      }, 1000);
+      }, 300);
 
       return () => {
-        clearOverlay(canvasRef);
         clearInterval(ticking);
+        clearInterval(detectBlinkingEyes);
       };
-    } else {
-      clearOverlay(canvasRef);
     }
-  }, [isQuestionStarted, isWebcamOpen, isQuestionDone]);
+  }, [isQuestionStarted, isWebcamOpen, isQuestionDone, lieCount]);
+
+  console.log("거짓말 포착 횟수: ", lieCount);
 
   return (
     <WebcamLayout>
@@ -89,7 +105,7 @@ function WebcamScreen({ isQuestionStarted }) {
             style={isMirrored ? { transform: "rotateY(180deg)" } : {}}
             ref={canvasRef}
           />
-          {questionCount > 0 ? <FaceFilter /> : <></>}
+          {lieCount > 0 ? <FaceFilter /> : <></>}
         </>
       ) : (
         <></>
@@ -106,7 +122,6 @@ const WebcamLayout = styled.div`
   background-color: #181717;
 
   video {
-    /* width: 100%; */
     height: 100%;
   }
 `;

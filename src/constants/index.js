@@ -2,13 +2,14 @@
 export const QUESTION_INTERVAL = 5000;
 export const QUESTION_DELAY = 1000;
 export const QUESTION_COUNTDOWN = 1000;
+export const DETECT_INTERVAL = 200;
 export const TOTAL_QUESTIONS = 10;
 export const LOADING_DELAY = 4000;
 
 export const QUESTION_LIST = [
-  "나는 게이다",
   "나는 모쏠이다",
   "지금 떨고있다",
+  "나는 이성을 좋아한다",
   "혼자 밥먹는게 편하다",
   "세상이 망하길 바란다",
   "전 여자친구가 생각난다",
