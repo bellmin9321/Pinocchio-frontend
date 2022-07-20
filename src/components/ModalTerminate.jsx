@@ -9,7 +9,12 @@ function ModalTerminate() {
   const navigate = useNavigate();
 
   const moveHome = () => {
-    useStore.setState({ showModal: false });
+    useStore.setState({
+      isMuted: false,
+      isWebcamOpen: true,
+      isMirrored: true,
+      showModal: false,
+    });
     navigate("/");
   };
 
