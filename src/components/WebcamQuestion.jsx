@@ -1,13 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 
-import {
-  QUESTION_INTERVAL,
-  QUESTION_DELAY,
-  QUESTION_COUNTDOWN,
-  TOTAL_QUESTIONS,
-} from "../constants";
-import { useInterval } from "../hooks/useInterval";
+import { QUESTION_COUNTDOWN, TOTAL_QUESTIONS } from "../constants";
 import useStore from "../zustand/store";
 import ModalResult from "./ModalResult";
 
@@ -27,22 +21,15 @@ function Question({ isQuestionStarted, setIsQuestionStarted }) {
     }
   }, []);
 
-  useInterval(
-    () => {
-      if (questionCount < TOTAL_QUESTIONS && isQuestionStarted === true) {
-        setTimeout(() => {
-          useStore.setState({ questionCount: questionCount + 1 });
-          setTime(5);
-        }, QUESTION_DELAY);
-      }
-    },
-    QUESTION_INTERVAL,
-    isQuestionStarted,
-  );
-
   useEffect(() => {
     if (isQuestionStarted === true) {
-      time > 1 && setTimeout(() => setTime(time - 1), QUESTION_COUNTDOWN);
+      if (time === 0) {
+        useStore.setState({ questionCount: questionCount + 1 });
+
+        return setTime(5);
+      }
+
+      setTimeout(() => setTime(time - 1), QUESTION_COUNTDOWN);
     }
   }, [isQuestionStarted, time]);
 
