@@ -3,7 +3,7 @@ import styled from "styled-components";
 import useStore from "../zustand/store";
 
 import WebcamScreen from "./WebcamScreen";
-import Question from "./Question";
+import Question from "./WebcamQuestion";
 import WebcamButton from "./WebcamButton";
 import Loading from "./Loading";
 import { LOADING_DELAY } from "../constants";
@@ -34,7 +34,7 @@ function Main() {
             isQuestionStarted={isQuestionStarted}
             setIsQuestionStarted={setIsQuestionStarted}
           />
-          <WebcamButton />
+          <WebcamButton isQuestionStarted={isQuestionStarted} />
           {showModal && <ModalTerminate />}
         </>
       )}
