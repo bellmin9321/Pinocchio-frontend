@@ -1,7 +1,6 @@
 import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import styled from "styled-components";
-import { loadModels } from "../helpers/headDetection";
 
 import Main from "./Main";
 import AnalysisResult from "./AnalysisResult";
@@ -9,8 +8,6 @@ import NotFound from "./NotFound";
 import Home from "./Home";
 import AnalysisScreenshot from "./AnalysisScreenshot";
 import GlobalStyle from "./GlobalStyle";
-
-loadModels();
 
 function App() {
   return (
