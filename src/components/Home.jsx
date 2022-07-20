@@ -7,6 +7,7 @@ function Home() {
     <>
       <Link to="/main">
         <Logo src="image/beHonest.png" />
+        <ClickText>CLICK !</ClickText>
       </Link>
       <Title>Be honest .</Title>
     </>
@@ -19,8 +20,24 @@ const Logo = styled.img`
   cursor: pointer;
 
   :hover {
-    opacity: 0.8;
+    opacity: 0.6;
     transform: scale(1.05);
+  }
+`;
+
+const ClickText = styled.div`
+  position: absolute;
+  bottom: 40%;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 80px;
+  opacity: 0;
+  background-color: white;
+  color: red;
+  padding: 10px;
+  border-radius: 15px;
+
+  :hover {
+    opacity: 1;
   }
 `;
 
