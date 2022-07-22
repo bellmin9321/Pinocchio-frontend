@@ -11,7 +11,7 @@ const WebcamButton = ({ isQuestionStarted }) => {
   const { isMuted, isWebcamOpen } = useStore();
 
   const showModalSmall = () => {
-    useStore.setState({ modalSize: "SMALL", showModal: true });
+    useStore.setState({ modalSize: "S", showModal: true });
   };
 
   return (
