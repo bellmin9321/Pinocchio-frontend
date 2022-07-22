@@ -7,8 +7,6 @@
     "npm": "8.11.0"
   },
   "dependencies": {
-    "@react-three/drei": "^9.17.1",
-    "@react-three/fiber": "^8.1.0",
     "@tensorflow-models/face-landmarks-detection": "^1.0.1",
     "@tensorflow/tfjs": "^3.18.0",
     "@tensorflow/tfjs-backend-webgl": "^3.18.0",
@@ -24,8 +22,10 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^4.4.0",
+    "react-image-gallery": "^1.2.8",
     "react-router-dom": "^6.3.0",
     "react-scripts": "5.0.1",
+    "react-speech-recognition": "^3.9.1",
     "react-webcam": "^7.0.1",
     "serve": "^14.0.1",
     "styled-components": "^5.3.5",
