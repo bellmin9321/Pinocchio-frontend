@@ -2,14 +2,15 @@ import React, { useCallback, useEffect, useRef } from "react";
 import styled from "styled-components";
 import Webcam from "react-webcam";
 
+import FaceFilter from "./FaceFilter";
+import WebcamFaceBox from "./WebcamFaceBox";
+
 import useStore from "../zustand/store";
+import { DETECT_INTERVAL } from "../constants";
 import {
   loadFaceLandmarksDetection,
   detectLies,
 } from "../helpers/FaceLandmarksDetectionHelper.js";
-import FaceFilter from "./FaceFilter";
-import { DETECT_INTERVAL } from "../constants";
-import WebcamFaceBox from "./WebcamFaceBox";
 
 function WebcamScreen({ isQuestionStarted }) {
   const {

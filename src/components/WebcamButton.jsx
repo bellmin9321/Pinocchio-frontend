@@ -1,11 +1,11 @@
 import React from "react";
 import styled from "styled-components";
+import { MdCallEnd } from "react-icons/md";
+import { FaExchangeAlt } from "react-icons/fa";
+import { AiTwotoneAudio, AiOutlineAudioMuted } from "react-icons/ai";
+import { BsCameraVideoFill, BsCameraVideoOffFill } from "react-icons/bs";
 
 import useStore from "../zustand/store";
-import { FaExchangeAlt } from "react-icons/fa";
-import { MdCallEnd } from "react-icons/md";
-import { BsCameraVideoFill, BsCameraVideoOffFill } from "react-icons/bs";
-import { AiTwotoneAudio, AiOutlineAudioMuted } from "react-icons/ai";
 
 const WebcamButton = ({ isQuestionStarted }) => {
   const { isMuted, isWebcamOpen } = useStore();

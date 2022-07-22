@@ -1,12 +1,12 @@
 import React from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
 import styled from "styled-components";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 
-import Main from "./Main";
-import AnalysisResult from "./AnalysisResult";
-import NotFound from "./NotFound";
 import Home from "./Home";
+import Main from "./Main";
+import NotFound from "./NotFound";
 import GlobalStyle from "./GlobalStyle";
+import AnalysisResult from "./AnalysisResult";
 
 function App() {
   return (

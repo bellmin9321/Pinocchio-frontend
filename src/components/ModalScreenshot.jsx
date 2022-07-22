@@ -2,8 +2,9 @@ import React from "react";
 import styled from "styled-components";
 import ImageGallery from "react-image-gallery";
 
-import useStore from "../zustand/store";
 import ModalWrapper from "./ModalWrapper";
+
+import useStore from "../zustand/store";
 
 function ModalScreenshot() {
   const { screenshotList } = useStore();

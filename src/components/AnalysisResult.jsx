@@ -1,9 +1,10 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
+
+import ModalScreenshot from "./ModalScreenshot";
 
 import useStore from "../zustand/store";
-import ModalScreenshot from "./ModalScreenshot";
 
 const AnalysisResult = () => {
   const navigate = useNavigate();

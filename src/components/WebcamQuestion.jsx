@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 
-import { QUESTION_COUNTDOWN, TOTAL_QUESTIONS } from "../constants";
-import useStore from "../zustand/store";
 import ModalResult from "./ModalResult";
 import WebcamVoiceRecognition from "./WebcamVoiceRecognition";
+
+import useStore from "../zustand/store";
+import { QUESTION_COUNTDOWN, TOTAL_QUESTIONS } from "../constants";
 
 function WebcamQuestion({ isQuestionStarted, setIsQuestionStarted }) {
   const {

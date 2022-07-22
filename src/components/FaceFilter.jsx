@@ -1,12 +1,12 @@
 import { useEffect } from "react";
 import styled from "styled-components";
-import { JEELIZFACEFILTER, NN_LIGHT } from "facefilter";
 import * as THREE from "three";
+import { JEELIZFACEFILTER, NN_LIGHT } from "facefilter";
 
 import useStore from "../zustand/store";
+import { noseEffect } from "../sound";
 import { JeelizResizer } from "../helpers/JeelizResizer";
 import { JeelizThreeHelper } from "../helpers/JeelizThreeHelper";
-import { noseEffect } from "../sound";
 
 const noseSound = new Audio(noseEffect);
 

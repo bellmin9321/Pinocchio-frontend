@@ -2,8 +2,9 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
-import useStore from "../zustand/store";
 import ModalWrapper from "./ModalWrapper";
+
+import useStore from "../zustand/store";
 
 function ModalTerminate() {
   const navigate = useNavigate();
