@@ -14,6 +14,7 @@ function ModalTerminate() {
       isWebcamOpen: true,
       isMirrored: true,
       showModal: false,
+      isHardcoreSelected: false,
     });
     navigate("/");
   };
