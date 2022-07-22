@@ -11,7 +11,7 @@ import { noseEffect } from "../sound";
 const noseSound = new Audio(noseEffect);
 
 function FaceFilter() {
-  const { lieCount } = useStore();
+  const { lieCount, isDetected } = useStore();
 
   useEffect(() => {
     let THREECAMERA = null;
@@ -19,8 +19,10 @@ function FaceFilter() {
     function detectCallback(faceIndex, isDetected) {
       if (isDetected) {
         console.log("INFO in detectCallback(): DETECTED");
+        useStore.setState({ isDetected: true });
       } else {
         console.log("INFO in detectCallback(): LOST");
+        useStore.setState({ isDetected: false });
       }
     }
 
@@ -30,9 +32,9 @@ function FaceFilter() {
       const HATOBJ3D = new THREE.Object3D();
       const loader = new THREE.BufferGeometryLoader();
 
-      loader.load("models/three/luffys_hat.json", (geometry) => {
+      loader.load("models/luffys_hat.json", (geometry) => {
         const mat = new THREE.MeshBasicMaterial({
-          map: new THREE.TextureLoader().load("models/three/Texture.jpg"),
+          map: new THREE.TextureLoader().load("models/Texture.jpg"),
         });
         const HAT_MESH = new THREE.Mesh(geometry, mat);
 
@@ -45,7 +47,7 @@ function FaceFilter() {
         const maskLoader = new THREE.BufferGeometryLoader();
 
         maskLoader.load(
-          "models/three/faceLowPolyEyesEarsFill2.json",
+          "models/faceLowPolyEyesEarsFill2.json",
           (maskBufferGeometry) => {
             const vertexShaderSource =
               "uniform mat2 videoTransformMat2;\n\
@@ -185,7 +187,7 @@ function FaceFilter() {
     if (0 < lieCount < 5) {
       JEELIZFACEFILTER.destroy();
     }
-  }, [lieCount]);
+  }, [lieCount, isDetected]);
 
   return (
     <div className="video-canvas">
@@ -199,7 +201,7 @@ const Canvas = styled.canvas`
   position: absolute;
   left: 50%;
   top: 50%;
-  width: 133vmin;
+  width: 133.5vmin;
   height: 100vmin;
   transform: translate(-50%, -50%) rotateY(180deg);
   @media (max-width: 787px) {
