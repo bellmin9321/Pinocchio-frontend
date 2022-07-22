@@ -9,6 +9,7 @@ import {
 } from "../helpers/FaceLandmarksDetectionHelper.js";
 import FaceFilter from "./FaceFilter";
 import { DETECT_INTERVAL } from "../constants";
+import WebcamFaceBox from "./WebcamFaceBox";
 
 function WebcamScreen({ isQuestionStarted }) {
   const {
@@ -52,7 +53,10 @@ function WebcamScreen({ isQuestionStarted }) {
           faceRotateCount++;
 
           if (faceRotateCount >= 5) {
-            useStore.setState((state) => ({ lieCount: state.lieCount + 1 }));
+            useStore.setState((state) => ({
+              lieCount: state.lieCount + 1,
+              headCount: state.headCount + 1,
+            }));
 
             capture();
           }
@@ -66,7 +70,10 @@ function WebcamScreen({ isQuestionStarted }) {
           eyesGazeCount++;
 
           if (eyesGazeCount > 1) {
-            useStore.setState((state) => ({ lieCount: state.lieCount + 1 }));
+            useStore.setState((state) => ({
+              lieCount: state.lieCount + 1,
+              eyesCount: state.eyesCount + 1,
+            }));
 
             capture();
           }
@@ -76,7 +83,10 @@ function WebcamScreen({ isQuestionStarted }) {
       // 눈 깜빡임 탐지
       const detectBlinkingEyes = setInterval(() => {
         if (detectedLyingBehavior?.EYES_BLINKING > 2) {
-          useStore.setState((state) => ({ lieCount: state.lieCount + 1 }));
+          useStore.setState((state) => ({
+            lieCount: state.lieCount + 1,
+            eyesCount: state.eyesCount + 1,
+          }));
 
           capture();
         }
@@ -88,8 +98,6 @@ function WebcamScreen({ isQuestionStarted }) {
       };
     }
   }, [isQuestionStarted, isWebcamOpen, isQuestionDone, lieCount]);
-
-  console.log("거짓말 포착 횟수: ", lieCount);
 
   return (
     <WebcamLayout>
@@ -105,7 +113,10 @@ function WebcamScreen({ isQuestionStarted }) {
             style={isMirrored ? { transform: "rotateY(180deg)" } : {}}
             ref={canvasRef}
           />
-          {lieCount > 0 ? <FaceFilter /> : <></>}
+          {isQuestionStarted && lieCount && !isQuestionDone && <FaceFilter />}
+          {!isQuestionDone && (
+            <WebcamFaceBox isQuestionStarted={isQuestionStarted} />
+          )}
         </>
       ) : (
         <></>
