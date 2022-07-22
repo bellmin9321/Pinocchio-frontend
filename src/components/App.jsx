@@ -6,7 +6,6 @@ import Main from "./Main";
 import AnalysisResult from "./AnalysisResult";
 import NotFound from "./NotFound";
 import Home from "./Home";
-import AnalysisScreenshot from "./AnalysisScreenshot";
 import GlobalStyle from "./GlobalStyle";
 
 function App() {
@@ -19,7 +18,6 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/main" element={<Main />} />
             <Route path="/result" element={<AnalysisResult />} />
-            <Route path="/result/screenshot" element={<AnalysisScreenshot />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
