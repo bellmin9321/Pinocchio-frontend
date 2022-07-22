@@ -3,7 +3,7 @@ export const QUESTION_DELAY = 1000;
 export const QUESTION_COUNTDOWN = 1000;
 export const DETECT_INTERVAL = 200;
 export const TOTAL_QUESTIONS = 10;
-export const LOADING_DELAY = 4000;
+export const LOADING_DELAY = 2000;
 
 export const QUESTION_LIST = [
   "나는 모쏠이다",

@@ -43,7 +43,7 @@ const AnalysisResult = () => {
               최다 포착 부위:{" "}
               {lieCount ? (headCount > eyesCount ? "머리" : "눈") : "없음"}
             </p>
-            <p>코길이: {(lieCount + 1) * 4.08}cm</p>
+            <p>코길이: {Math.round((lieCount + 1) * 4.08 * 100) / 100}cm</p>
           </InformationBox>
           <ScreenshotBox>
             {screenshotList.length ? (

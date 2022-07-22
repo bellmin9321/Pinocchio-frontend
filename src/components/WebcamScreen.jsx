@@ -69,7 +69,7 @@ function WebcamScreen({ isQuestionStarted }) {
         ) {
           eyesGazeCount++;
 
-          if (eyesGazeCount > 1) {
+          if (eyesGazeCount > 2) {
             useStore.setState((state) => ({
               lieCount: state.lieCount + 1,
               eyesCount: state.eyesCount + 1,

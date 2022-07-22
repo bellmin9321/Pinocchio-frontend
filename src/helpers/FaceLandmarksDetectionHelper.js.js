@@ -83,14 +83,14 @@ export async function detectLies(video) {
             gaze = "UNDETECTED GAZING";
           } else if (
             0.82 < normalizedXIrisPosition &&
-            normalizedXIrisPosition < 0.84 &&
-            0.95 > normalizedYIrisPosition > 0.8
+            normalizedXIrisPosition < 0.85 &&
+            0.8 < normalizedYIrisPosition < 0.95
           ) {
             gaze = "RIGHT";
           } else if (
-            0.76 < normalizedXIrisPosition &&
-            normalizedXIrisPosition < 0.78 &&
-            0.95 > normalizedYIrisPosition > 0.8
+            0.73 < normalizedXIrisPosition &&
+            normalizedXIrisPosition < 0.76 &&
+            0.8 < normalizedYIrisPosition > 0.95
           ) {
             gaze = "LEFT";
           } else {
