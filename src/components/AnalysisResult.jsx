@@ -3,55 +3,68 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 import useStore from "../zustand/store";
+import ModalScreenshot from "./ModalScreenshot";
 
 const AnalysisResult = () => {
   const navigate = useNavigate();
-  const { screenshotList, lieCount } = useStore();
+  const { screenshotList, lieCount, showModal, headCount, eyesCount } =
+    useStore();
 
   const initializeScreenshotList = () => {
     useStore.setState({
       screenshotList: [],
       isQuestionDone: false,
       lieCount: 0,
+      isHardcoreSelected: false,
     });
     navigate("/main");
+  };
+
+  const openScreenshotModal = () => {
+    useStore.setState({
+      showModal: true,
+      modalSize: "L",
+    });
   };
 
   return (
     <AnalysisResultLayout>
       <AnalysisResultBox>
         <header>
-          <p className="title">분석 결과</p>
-          <p className="back" onClick={initializeScreenshotList}>
+          <span className="title">분석 결과</span>
+          <span className="restart" onClick={initializeScreenshotList}>
             RESTART
-          </p>
+          </span>
         </header>
         <section>
           <InformationBox>
             <p>거짓말 포착횟수: {lieCount}번</p>
-            <p>최다 포착 부위: 눈</p>
+            <p>
+              최다 포착 부위:{" "}
+              {lieCount ? (headCount > eyesCount ? "머리" : "눈") : "없음"}
+            </p>
             <p>코길이: {(lieCount + 1) * 4.08}cm</p>
           </InformationBox>
           <ScreenshotBox>
             {screenshotList.length ? (
               <>
-                {screenshotList.map((screenshot, i) => (
-                  <Screenshot
-                    key={i}
-                    onClick={() => navigate("/result/screenshot")}
-                    height={"70%"}
-                    width={"83%"}
-                    src={screenshot}
-                  />
-                ))}
+                <span className="title">거짓말 포착 스크린샷</span>
+                <Screenshot
+                  onClick={openScreenshotModal}
+                  height={"70%"}
+                  width={"83%"}
+                  src={screenshotList[0]}
+                />
+                <ClickText>스크린샷을 클릭하면 볼 수 있습니다</ClickText>
               </>
             ) : (
-              <HonestBox>
-                <img height={"100%"} width={"100%"} src="image/good.png" />
-                <div>YOU ARE HONEST</div>
-              </HonestBox>
+              <HonestImageBox>
+                <img height={"85%"} width={"90%"} src="image/good.png" />
+                <span>YOU ARE HONEST</span>
+              </HonestImageBox>
             )}
           </ScreenshotBox>
+          {showModal && <ModalScreenshot />}
         </section>
       </AnalysisResultBox>
     </AnalysisResultLayout>
@@ -88,7 +101,7 @@ const AnalysisResultBox = styled.div`
     font-size: 50px;
     font-weight: bold;
 
-    .back {
+    .restart {
       cursor: pointer;
       background-color: #1c6aaa;
       color: white;
@@ -129,9 +142,9 @@ const InformationBox = styled.div`
 
 const ScreenshotBox = styled.div`
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
+  justify-content: center;
   cursor: pointer;
   background-color: #1c6aaa;
   color: white;
@@ -139,9 +152,13 @@ const ScreenshotBox = styled.div`
   height: 100%;
   width: 49%;
   border-radius: 10px;
+
+  .title {
+    margin-top: 15px;
+  }
 `;
 
-const HonestBox = styled.div`
+const HonestImageBox = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -154,12 +171,12 @@ const HonestBox = styled.div`
     border-radius: 15px;
 
     :hover {
-      transform: scale(1.05);
-      transition: 300ms ease-in;
+      transform: scale(1.03);
+      transition: 200ms ease-in;
     }
   }
 
-  div {
+  span {
     font-family: "Rocher";
     margin-top: 12px;
   }
@@ -167,10 +184,23 @@ const HonestBox = styled.div`
 
 const Screenshot = styled.img`
   flex: 1 0 10%;
-  width: 21%;
-  height: 49%;
+  width: 80%;
+  height: 100%;
   padding: 0 2px;
   border-radius: 10px;
+  margin-bottom: 20px;
+  filter: blur(1.5rem);
+
+  :hover {
+    opacity: 0.7;
+  }
+`;
+
+const ClickText = styled.span`
+  position: absolute;
+  bottom: 8%;
+  font-size: 20px;
+  color: blue;
 `;
 
 export default AnalysisResult;
