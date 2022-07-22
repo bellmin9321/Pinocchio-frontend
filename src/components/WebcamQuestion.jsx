@@ -4,10 +4,17 @@ import styled from "styled-components";
 import { QUESTION_COUNTDOWN, TOTAL_QUESTIONS } from "../constants";
 import useStore from "../zustand/store";
 import ModalResult from "./ModalResult";
+import WebcamVoiceRecognition from "./WebcamVoiceRecognition";
 
-function Question({ isQuestionStarted, setIsQuestionStarted }) {
-  const { isWebcamOpen, questionList, randomQuestionList, questionCount } =
-    useStore();
+function WebcamQuestion({ isQuestionStarted, setIsQuestionStarted }) {
+  const {
+    isWebcamOpen,
+    questionList,
+    randomQuestionList,
+    questionCount,
+    hardcoreList,
+    isHardcoreSelected,
+  } = useStore();
   const [time, setTime] = useState(5);
 
   useEffect(() => {
@@ -36,7 +43,7 @@ function Question({ isQuestionStarted, setIsQuestionStarted }) {
   useEffect(() => {
     if (questionCount === TOTAL_QUESTIONS) {
       useStore.setState({
-        modalSize: "LARGE",
+        modalSize: "M",
         isQuestionDone: true,
       });
     }
@@ -46,19 +53,38 @@ function Question({ isQuestionStarted, setIsQuestionStarted }) {
     isQuestionStarted ? (
       questionCount < TOTAL_QUESTIONS ? (
         <>
+          <ProgressBox>진행률 {questionCount}0%</ProgressBox>
           <QuestionBox>
-            <div className="question">{randomQuestionList[questionCount]}</div>
+            <div className="question">
+              {isHardcoreSelected
+                ? hardcoreList[questionCount]
+                : randomQuestionList[questionCount]}
+            </div>
             <div className="time">{time}</div>
           </QuestionBox>
-          <ProgressBox>진행률 {questionCount}0%</ProgressBox>
+          <WebcamVoiceRecognition isQuestionStarted={isQuestionStarted} />
         </>
       ) : (
         <ModalResult />
       )
     ) : (
-      <QuestionStartBox onClick={() => setIsQuestionStarted(true)}>
-        <div>질문시작</div>
-      </QuestionStartBox>
+      <>
+        <QuestionStartBox onClick={() => setIsQuestionStarted(true)}>
+          <div>질문 시작</div>
+        </QuestionStartBox>
+        <HardcoreBox
+          style={
+            isHardcoreSelected === true
+              ? { backgroundColor: "black" }
+              : { backgroundColor: "white" }
+          }
+          onClick={() =>
+            useStore.setState({ isHardcoreSelected: !isHardcoreSelected })
+          }
+        >
+          <div>HARDCORE</div>
+        </HardcoreBox>
+      </>
     )
   ) : (
     <></>
@@ -82,6 +108,23 @@ const QuestionStartBox = styled.div`
     cursor: pointer;
     transform: scale(1.05);
   }
+`;
+
+const HardcoreBox = styled.button`
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  bottom: 12%;
+  transform: translateX(220px);
+  width: 10%;
+  padding: 10px 0;
+  font-size: 20px;
+  color: red;
+  border: none;
+  border-radius: 5px;
+  z-index: 15;
+  cursor: pointer;
 `;
 
 const QuestionBox = styled.div`
@@ -129,10 +172,10 @@ const ProgressBox = styled.div`
   width: 15%;
   background-color: white;
   color: black;
-  padding: 20px;
-  font-size: 35px;
+  padding: 15px;
+  font-size: 30px;
   border-radius: 15px;
   z-index: 15;
 `;
 
-export default Question;
+export default WebcamQuestion;
