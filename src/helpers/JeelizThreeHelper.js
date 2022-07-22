@@ -3,20 +3,16 @@ import { JEELIZFACEFILTER } from "facefilter";
 import * as THREE from "three";
 
 export const JeelizThreeHelper = (() => {
-  // internal settings:
   const _settings = {
-    rotationOffsetX: 0.0, // negative -> look upper. in radians
-    pivotOffsetYZ: [0.2, 0.6],// YZ of the distance between the center of the cube and the pivot
+    rotationOffsetX: 0.0, 
+    pivotOffsetYZ: [0.2, 0.6],
     
-    detectionThreshold: 0.8, // sensibility, between 0 and 1. Less -> more sensitive
+    detectionThreshold: 0.8,
     detectionHysteresis: 0.02,
-
-    //tweakMoveYRotateX: 0,//0.5, // tweak value: move detection window along Y axis when rotate the face around X (look up <-> down)
     
-    cameraMinVideoDimFov: 35 // Field of View for the smallest dimension of the video in degrees
+    cameraMinVideoDimFov: 35
   };
 
-  // private vars:
   let _threeRenderer = null,
       _threeScene = null,
       _threeVideoMesh = null,
@@ -57,7 +53,6 @@ export const JeelizThreeHelper = (() => {
 
   function create_threeCompositeObjects(){
     for (let i=0; i<_maxFaces; ++i){
-      // COMPOSITE OBJECT WHICH WILL TRACK A DETECTED FACE
       const threeCompositeObject = new THREE.Object3D();
       threeCompositeObject.frustumCulled = false;
       threeCompositeObject.visible = false;
@@ -112,11 +107,9 @@ export const JeelizThreeHelper = (() => {
       return;
     }
 
-    // init video texture with red:
     _threeVideoTexture = new THREE.DataTexture( new Uint8Array([255,0,0]), 1, 1, THREE.RGBAFormat);
     _threeVideoTexture.needsUpdate = true;
 
-    // CREATE THE VIDEO BACKGROUND:
     const videoMaterial = new THREE.RawShaderMaterial({
       depthWrite: false,
       depthTest: false,
@@ -132,16 +125,15 @@ export const JeelizThreeHelper = (() => {
 
     const videoGeometry = new THREE.BufferGeometry()
     const videoScreenCorners = new Float32Array([-1,-1,   1,-1,   1,1,   -1,1]);
-    // handle both new and old THREE.js versions:
     const setVideoGeomAttribute = (videoGeometry.setAttribute || videoGeometry.addAttribute).bind(videoGeometry);
     setVideoGeomAttribute( "position", new THREE.BufferAttribute( videoScreenCorners, 2 ) );
     videoGeometry.setIndex(new THREE.BufferAttribute(new Uint16Array([0,1,2, 0,2,3]), 1));
     _threeVideoMesh = new THREE.Mesh(videoGeometry, videoMaterial);
     that.apply_videoTexture(_threeVideoMesh);
-    _threeVideoMesh.renderOrder = -1000; // render first
+    _threeVideoMesh.renderOrder = -1000;
     _threeVideoMesh.frustumCulled = false;
     _threeScene.add(_threeVideoMesh);
-  } //end create_videoScreen()d
+  }
 
 
   function detect(detectState){
@@ -150,66 +142,51 @@ export const JeelizThreeHelper = (() => {
       const ds = detectState[i];
       if (_isDetected && ds.detected < _settings.detectionThreshold-_settings.detectionHysteresis){
         
-        // DETECTION LOST
         if (_detectCallback) _detectCallback(i, false);
         threeCompositeObject.visible = false;
       } else if (!_isDetected && ds.detected > _settings.detectionThreshold+_settings.detectionHysteresis){
         
-        // FACE DETECTED
         if (_detectCallback) _detectCallback(i, true);
         threeCompositeObject.visible = true;
       }
-    }); //end loop on all detection slots
+    }); 
   }
 
 
   function update_poses(ds, threeCamera){
-    // tan( <horizontal FoV> / 2 ):
-    const halfTanFOVX = Math.tan(threeCamera.aspect * threeCamera.fov * Math.PI/360); //tan(<horizontal FoV>/2), in radians (threeCamera.fov is vertical FoV)
+    const halfTanFOVX = Math.tan(threeCamera.aspect * threeCamera.fov * Math.PI/360);
 
     _threeCompositeObjects.forEach((threeCompositeObject, i) => {
       if (!threeCompositeObject.visible) return;
       const detectState = ds[i];
 
-      // tweak Y position depending on rx:
-      //const tweak = _settings.tweakMoveYRotateX * Math.tan(detectState.rx);
       const cz = Math.cos(detectState.rz), sz = Math.sin(detectState.rz);
       
-      // relative width of the detection window (1-> whole width of the detection window):
       const W = detectState.s * _scaleW;
 
-      // distance between the front face of the cube and the camera:
       const DFront = 1 / ( 2 * W * halfTanFOVX );
       
-      // D is the distance between the center of the unit cube and the camera:
       const D = DFront + 0.5;
 
-      // coords in 2D of the center of the detection window in the viewport:
       const xv = detectState.x * _scaleW;
       const yv = detectState.y * _scaleW;
 
-      // coords in 3D of the center of the cube (in the view coordinates system):
-      const z = -D;   // minus because view coordinate system Z goes backward
+      const z = -D; 
       const x = xv * D * halfTanFOVX;
       const y = yv * D * halfTanFOVX / _canvasAspectRatio;
 
-      // set position before pivot:
       threeCompositeObject.position.set(-sz*_settings.pivotOffsetYZ[0], -cz*_settings.pivotOffsetYZ[0], +_settings.pivotOffsetYZ[1]);
 
-      // set rotation and apply it to position:
       threeCompositeObject.rotation.set(detectState.rx+_settings.rotationOffsetX, detectState.ry, detectState.rz, "ZYX");
       threeCompositeObject.position.applyEuler(threeCompositeObject.rotation);
 
-      // add translation part:
       _threeTranslation.set(x, y+_settings.pivotOffsetYZ[0], z+_settings.pivotOffsetYZ[1]);
       threeCompositeObject.position.add(_threeTranslation);
-    }); //end loop on composite objects
+    });
   }
 
 
-  //public methods:
   const that = {
-    // launched with the same spec object than callbackReady. set spec.threeCanvasId to the ID of the threeCanvas to be in 2 canvas mode:
     init: (spec, detectCallback) => {
       destroy();
 
@@ -221,11 +198,9 @@ export const JeelizThreeHelper = (() => {
       _isMultiFaces = (_maxFaces>1);
       _videoElement = spec.videoElement;
 
-      // enable 2 canvas mode if necessary:
       let threeCanvas = null;
       if (spec.threeCanvasId){
         _isSeparateThreeCanvas = true;
-        // adjust the threejs canvas size to the threejs canvas:
         threeCanvas = document.getElementById(spec.threeCanvasId);
         threeCanvas.setAttribute("width", _faceFilterCv.width);
         threeCanvas.setAttribute("height", _faceFilterCv.height);
@@ -237,12 +212,11 @@ export const JeelizThreeHelper = (() => {
         _detectCallback = detectCallback;
       }
 
-       // init THREE.JS context:
       _threeRenderer = new THREE.WebGLRenderer({
         context: (_isSeparateThreeCanvas) ? null : _gl,
         canvas: threeCanvas,
         alpha: (_isSeparateThreeCanvas || spec.alpha) ? true : false,
-        preserveDrawingBuffer: true // to make image capture possible
+        preserveDrawingBuffer: true
       });
 
       _threeScene = new THREE.Scene();
@@ -251,9 +225,8 @@ export const JeelizThreeHelper = (() => {
       create_threeCompositeObjects();
       create_videoScreen();
 
-      // handle device orientation change:
       window.addEventListener("orientationchange", () => {
-        setTimeout(JEELIZFACEFILTER.resize, 100);
+        setTimeout(JEELIZFACEFILTER.resize, 50);
       }, false);
 
       
@@ -276,7 +249,6 @@ export const JeelizThreeHelper = (() => {
     detect: (detectState) => {
       const ds = (_isMultiFaces) ? detectState : [detectState];
 
-      // update detection states:
       detect(ds);
     },
 
@@ -289,12 +261,10 @@ export const JeelizThreeHelper = (() => {
     render: (detectState, threeCamera) => {
       const ds = (_isMultiFaces) ? detectState : [detectState];
 
-      // update detection states then poses:
       detect(ds);
       update_poses(ds, threeCamera);
 
       if (_isSeparateThreeCanvas){
-        // render the video texture on the faceFilter canvas:
         _gl.viewport(0, 0, _faceFilterCv.width, _faceFilterCv.height);
         _gl.useProgram(_glShpCopyCut);
         _gl.uniformMatrix2fv(_glShpCopyCutVideoMatUniformPointer, false, _videoTransformMat2);
@@ -302,30 +272,23 @@ export const JeelizThreeHelper = (() => {
         _gl.bindTexture(_gl.TEXTURE_2D, _glVideoTexture);
         _gl.drawElements(_gl.TRIANGLES, 3, _gl.UNSIGNED_SHORT, 0);
       } else {
-        // reinitialize the state of THREE.JS because JEEFACEFILTER have changed stuffs:
-        // -> can be VERY costly !
-        // _threeRenderer.resetState();
         _threeRenderer.state.reset();
       }
 
-      // trigger the render of the THREE.JS SCENE:
       _threeRenderer.render(_threeScene, threeCamera);
     },
 
 
-    sortFaces: (bufferGeometry, axis, isInv) => { // sort faces long an axis
-      // Useful when a bufferGeometry has alpha: we should render the last faces first
+    sortFaces: (bufferGeometry, axis, isInv) => { 
       const axisOffset = {X:0, Y:1, Z:2}[axis.toUpperCase()];
       const sortWay = (isInv) ? -1 : 1;
 
-      // fill the faces array:
       const nFaces = bufferGeometry.index.count/3;
       const faces = new Array(nFaces);
       for (let i=0; i<nFaces; ++i){
         faces[i] = [bufferGeometry.index.array[3*i], bufferGeometry.index.array[3*i+1], bufferGeometry.index.array[3*i+2]];
       }
 
-      // compute centroids:
       const aPos = bufferGeometry.attributes.position.array;
       const centroids = faces.map((face, faceIndex) => {
         return [
@@ -336,19 +299,17 @@ export const JeelizThreeHelper = (() => {
         ];
       });
 
-      // sort centroids:
       centroids.sort((ca, cb) => {
         return (ca[axisOffset]-cb[axisOffset]) * sortWay;
       });
 
-      // reorder bufferGeometry faces:
       centroids.forEach((centroid, centroidIndex) => {
         const face = centroid[3];
         bufferGeometry.index.array[3*centroidIndex] = face[0];
         bufferGeometry.index.array[3*centroidIndex+1] = face[1];
         bufferGeometry.index.array[3*centroidIndex+2] = face[2];
       });
-    }, //end sortFaces
+    },
 
 
     get_threeVideoTexture: () => {
@@ -361,7 +322,6 @@ export const JeelizThreeHelper = (() => {
         return;
       }
       threeMesh.onAfterRender = () => {
-        // Replace _threeVideoTexture.__webglTexture by the real video texture:
         try {
           _threeRenderer.properties.update(_threeVideoTexture, "__webglTexture", _glVideoTexture);
           _threeVideoTexture.magFilter = THREE.LinearFilter;
@@ -374,8 +334,6 @@ export const JeelizThreeHelper = (() => {
       };
     },
 
-
-    // create an occluder, IE a transparent object which writes on the depth buffer:
     create_threejsOccluder: function(occluderURL, callback){
       const occluderMesh = new THREE.Mesh();
       new THREE.BufferGeometryLoader().load(occluderURL, (occluderGeometry) =>{
@@ -386,7 +344,7 @@ export const JeelizThreeHelper = (() => {
           colorWrite: false
         });
         
-        occluderMesh.renderOrder = -1; //render first
+        occluderMesh.renderOrder = -1; 
         occluderMesh.material = mat;
         occluderMesh.geometry = occluderGeometry;
         if (typeof(callback)!=="undefined" && callback) callback(occluderMesh);
@@ -410,13 +368,11 @@ export const JeelizThreeHelper = (() => {
 
 
     update_camera: function(threeCamera){
-      // compute aspectRatio:
       const canvasElement = _threeRenderer.domElement;
       const cvw = canvasElement.width;
       const cvh = canvasElement.height;
       _canvasAspectRatio = cvw / cvh;
 
-      // compute vertical field of view:
       const vw = _videoElement.videoWidth;
       const vh = _videoElement.videoHeight;
       const videoAspectRatio = vw / vh;
@@ -424,13 +380,10 @@ export const JeelizThreeHelper = (() => {
       const fov = _settings.cameraMinVideoDimFov * fovFactor;
       console.log("update_camera(): Estimated vertical video FoV is", fov);
       
-      // compute X and Y offsets in pixels:
       let scale = 1.0;
       if (_canvasAspectRatio > videoAspectRatio) {
-        // the canvas is more in landscape format than the video, so we crop top and bottom margins:
         scale = cvw / vw;
       } else {
-        // the canvas is more in portrait format than the video, so we crop right and left margins:
         scale = cvh / vh;
       }
       const cvws = vw * scale, cvhs = vh * scale;
@@ -438,17 +391,15 @@ export const JeelizThreeHelper = (() => {
       const offsetY = (cvhs - cvh) / 2.0;
       _scaleW = cvw / cvws;
 
-      // apply parameters:
       threeCamera.aspect = _canvasAspectRatio;
       threeCamera.fov = fov;
       console.log("update_camera(): camera vertical estimated FoV is", fov, "deg");
       threeCamera.setViewOffset(cvws, cvhs, offsetX, offsetY, cvw, cvh);
       threeCamera.updateProjectionMatrix();
 
-      // update drawing area:
       _threeRenderer.setSize(cvw, cvh, false);
       _threeRenderer.setViewport(0, 0, cvw, cvh);
-    }, //end update_camera()
+    },
 
 
     resize: function(w, h, threeCamera){
