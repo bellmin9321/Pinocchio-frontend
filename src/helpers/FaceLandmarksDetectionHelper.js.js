@@ -40,6 +40,74 @@ export async function loadFaceLandmarksDetection(video, canvas) {
   }
 }
 
+export async function detectLies(video) {
+  const predictions = await detector.estimateFaces(video);
+  let positionXLeftIris;
+  let positionYLeftIris;
+
+  if (predictions) {
+    drawIris(predictions);
+
+    if (predictions?.length > 0) {
+      predictions.forEach((prediction) => {
+        const keypoints = prediction.keypoints;
+        positionXLeftIris = keypoints[leftEyeIris[0]].x;
+        positionYLeftIris = keypoints[leftEyeIris[0]].y;
+
+        const faceTopRightX = video.width - BOUNDING_BOX.topLeft[0];
+        const faceTopRightY = BOUNDING_BOX.topLeft[1];
+        const faceBottomLeftX = video.width - BOUNDING_BOX.bottomRight[0];
+        const faceBottomLeftY = BOUNDING_BOX.bottomRight[1];
+
+        // Detect Gazing
+        if (faceBottomLeftX > 0 && !isFaceRotated(video, predictions)) {
+          const positionLeftIrisX = video.width - positionXLeftIris;
+          const normalizedXIrisPosition = normalize(
+            positionLeftIrisX,
+            faceTopRightX,
+            faceBottomLeftX,
+          );
+
+          const normalizedYIrisPosition = normalize(
+            positionYLeftIris,
+            faceTopRightY,
+            faceBottomLeftY,
+          );
+
+          if (
+            normalizedXIrisPosition < 0.7 ||
+            normalizedXIrisPosition > 0.85 ||
+            normalizedYIrisPosition === 1 ||
+            normalizedYIrisPosition < 0.75
+          ) {
+            gaze = "UNDETECTED GAZING";
+          } else if (
+            0.82 < normalizedXIrisPosition &&
+            normalizedXIrisPosition < 0.84 &&
+            0.95 > normalizedYIrisPosition > 0.8
+          ) {
+            gaze = "RIGHT";
+          } else if (
+            0.76 < normalizedXIrisPosition &&
+            normalizedXIrisPosition < 0.78 &&
+            0.95 > normalizedYIrisPosition > 0.8
+          ) {
+            gaze = "LEFT";
+          } else {
+            gaze = "STRAIGHT";
+          }
+        }
+      });
+    }
+
+    return {
+      EYES_BLINKING: detectBlinkingEyes(predictions),
+      EYES_GAZING: gaze,
+      HEAD_STATE: state,
+    };
+  }
+}
+
 const normalize = (val, max, min) =>
   Math.max(0, Math.min(1, (val - min) / (max - min)));
 
@@ -63,13 +131,13 @@ function isFaceRotated(video, predictions) {
 
         if (
           widthLeftSideFace < widthRightSideFace &&
-          Math.abs(difference) > 15
+          Math.abs(difference) > 30
         ) {
           state = "LEFT";
           return true;
         } else if (
           widthLeftSideFace > widthRightSideFace &&
-          Math.abs(difference) > 15
+          Math.abs(difference) > 30
         ) {
           state = "RIGHT";
           return true;
@@ -79,68 +147,6 @@ function isFaceRotated(video, predictions) {
         return false;
       });
     }
-  }
-}
-
-export async function detectLies(video) {
-  const predictions = await detector.estimateFaces(video);
-  let amountStraightEvents = 0;
-  let positionXLeftIris;
-  let positionYLeftIris;
-
-  if (predictions) {
-    drawIris(predictions);
-
-    if (predictions?.length > 0) {
-      predictions.forEach((prediction) => {
-        const keypoints = prediction.keypoints;
-
-        positionXLeftIris = keypoints[leftEyeIris[0]].x;
-        positionYLeftIris = keypoints[leftEyeIris[0]].y;
-
-        const faceTopRightX = video.width - BOUNDING_BOX.topLeft[0];
-        const faceTopRightY = BOUNDING_BOX.topLeft[1];
-        const faceBottomLeftX = video.width - BOUNDING_BOX.bottomRight[0];
-        const faceBottomLeftY = BOUNDING_BOX.bottomRight[1];
-
-        if (faceBottomLeftX > 0 && !isFaceRotated(video, predictions)) {
-          const positionLeftIrisX = video.width - positionXLeftIris;
-          const normalizedXIrisPosition = normalize(
-            positionLeftIrisX,
-            faceTopRightX,
-            faceBottomLeftX,
-          );
-
-          if (normalizedXIrisPosition > 0.78) {
-            gaze = "RIGHT";
-          } else if (normalizedXIrisPosition < 0.74) {
-            gaze = "LEFT";
-          } else {
-            amountStraightEvents++;
-            if (amountStraightEvents > 8) {
-              gaze = "STRAIGHT";
-              amountStraightEvents = 0;
-            }
-          }
-
-          const normalizedYIrisPosition = normalize(
-            positionYLeftIris,
-            faceTopRightY,
-            faceBottomLeftY,
-          );
-
-          if (normalizedYIrisPosition > 0.95) {
-            gaze = "TOP";
-          }
-        }
-      });
-    }
-
-    return {
-      EYES_BLINKING: detectBlinkingEyes(predictions),
-      EYES_GAZING: gaze,
-      HEAD_STATE: state,
-    };
   }
 }
 
@@ -157,7 +163,7 @@ function drawIris(predictions) {
             const { x, y } = keypoints[i];
 
             ctx.beginPath();
-            ctx.arc(x, y, 2, 0, 2 * Math.PI);
+            ctx.arc(x, y, 5, 0, 5 * Math.PI);
             ctx.fill();
           }
         });
@@ -166,11 +172,12 @@ function drawIris(predictions) {
   }
 }
 
-function detectBlinkingEyes(predictions) {
-  let eyesClosed = 0;
-  let eyesBlinkedCounter = 0;
-  let countForReset = 0;
+let eyesClosed = 0;
+let eyesBlinkedCounter = 0;
+let countForReset = 0;
+let keypoints;
 
+function detectBlinkingEyes(predictions) {
   if (ctx) {
     ctx.fillStyle = "red";
 
@@ -180,7 +187,6 @@ function detectBlinkingEyes(predictions) {
       leftEyeLower0,
     );
 
-    let keypoints;
     let count = 1;
 
     if (predictions) {
@@ -211,14 +217,14 @@ function detectBlinkingEyes(predictions) {
         keypoints[leftEyeUpper0[3]].y - keypoints[leftEyeLower0[4]].y,
       );
 
-      if (rightEyeCenterPointDistance < 3 && leftEyeCenterPointDistance < 3) {
+      if (rightEyeCenterPointDistance < 2 && leftEyeCenterPointDistance < 2) {
         eyesClosed = 1;
       }
 
       if (
         eyesClosed === 1 &&
-        rightEyeCenterPointDistance > 6.5 &&
-        leftEyeCenterPointDistance > 6.5
+        rightEyeCenterPointDistance > 5 &&
+        leftEyeCenterPointDistance > 5
       ) {
         eyesBlinkedCounter++;
         eyesClosed = 0;
