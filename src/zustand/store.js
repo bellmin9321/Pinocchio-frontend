@@ -1,17 +1,25 @@
 import create from "zustand";
 import { devtools } from "zustand/middleware";
-import { QUESTION_LIST } from "../constants";
+import { QUESTION_LIST, HARDCORE_QUESTION_LIST } from "../constants";
 
 const store = (set) => ({
   isMuted: false,
   isWebcamOpen: true,
-  isMirrored: false,
+  isMirrored: true,
+  isHardcoreSelected: false,
   isQuestionDone: false,
+  isDetected: true,
+  isFitted: true,
   questionList,
+  hardcoreList,
   randomQuestionList: [],
   showModal: false,
-  modalSize: "SMALL",
+  modalSize: "S",
   screenshotList: [],
+  questionCount: 0,
+  lieCount: 0,
+  headCount: 0,
+  eyesCount: 0,
 
   toggleIsMuted: () => set((state) => ({ isMuted: !state.isMuted })),
   toggleIsWebcamOpen: () =>
@@ -20,6 +28,7 @@ const store = (set) => ({
 });
 
 const questionList = QUESTION_LIST;
+const hardcoreList = HARDCORE_QUESTION_LIST;
 
 const useStore = create(devtools(store));
 

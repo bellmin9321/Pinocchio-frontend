@@ -1,29 +1,28 @@
 import React from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
 import styled from "styled-components";
-import { loadModels } from "../helpers/headDetection";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 
-import Main from "./Main";
-import AnalysisResult from "./AnalysisResult";
-import NotFound from "./NotFound";
 import Home from "./Home";
-import AnalysisScreenshot from "./AnalysisScreenshot";
-
-loadModels();
+import Main from "./Main";
+import NotFound from "./NotFound";
+import GlobalStyle from "./GlobalStyle";
+import AnalysisResult from "./AnalysisResult";
 
 function App() {
   return (
-    <AppLayout>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/main" element={<Main />} />
-          <Route path="/result" element={<AnalysisResult />} />
-          <Route path="/result/screenshot" element={<AnalysisScreenshot />} />
-          <Route element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </AppLayout>
+    <>
+      <GlobalStyle />
+      <AppLayout>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/main" element={<Main />} />
+            <Route path="/result" element={<AnalysisResult />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </AppLayout>
+    </>
   );
 }
 

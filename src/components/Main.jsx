@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import useStore from "../zustand/store";
 
-import WebcamScreen from "./WebcamScreen";
-import Question from "./Question";
-import WebcamButton from "./WebcamButton";
 import Loading from "./Loading";
-import { LOADING_DELAY } from "../constants";
+import Question from "./WebcamQuestion";
+import WebcamScreen from "./WebcamScreen";
+import WebcamButton from "./WebcamButton";
 import ModalTerminate from "./ModalTerminate";
+
+import useStore from "../zustand/store";
+import { LOADING_DELAY } from "../constants";
 
 function Main() {
   const [isQuestionStarted, setIsQuestionStarted] = useState(false);
@@ -34,7 +35,7 @@ function Main() {
             isQuestionStarted={isQuestionStarted}
             setIsQuestionStarted={setIsQuestionStarted}
           />
-          <WebcamButton />
+          <WebcamButton isQuestionStarted={isQuestionStarted} />
           {showModal && <ModalTerminate />}
         </>
       )}

@@ -2,14 +2,21 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
-import useStore from "../zustand/store";
 import ModalWrapper from "./ModalWrapper";
+
+import useStore from "../zustand/store";
 
 function ModalTerminate() {
   const navigate = useNavigate();
 
   const moveHome = () => {
-    useStore.setState({ showModal: false });
+    useStore.setState({
+      isMuted: false,
+      isWebcamOpen: true,
+      isMirrored: true,
+      showModal: false,
+      isHardcoreSelected: false,
+    });
     navigate("/");
   };
 

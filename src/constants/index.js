@@ -1,27 +1,45 @@
-// Question
 export const QUESTION_INTERVAL = 5000;
 export const QUESTION_DELAY = 1000;
 export const QUESTION_COUNTDOWN = 1000;
-export const TOTAL_QUESTIONS = 1;
-export const LOADING_DELAY = 1;
+export const DETECT_INTERVAL = 200;
+export const TOTAL_QUESTIONS = 10;
+export const LOADING_DELAY = 2000;
 
 export const QUESTION_LIST = [
-  "나는 게이다",
   "나는 모쏠이다",
-  "지금 떨고있다",
+  "나는 매력있다",
+  "나는 지금 떨고있다",
+  "나는 귀여운 편이다",
+  "나는 이성을 좋아한다",
   "혼자 밥먹는게 편하다",
   "세상이 망하길 바란다",
-  "전 여자친구가 생각난다",
+  "나는 비밀을 잘 지킨다",
+  "나는 약속을 잘 지킨다",
   "내가 잘났다고 생각한다",
   "내가 잘생겼다고 생각한다",
   "코딩을 잘한다고 생각한다",
-  "바닐코딩에 온 걸 후회한다",
-  "머리를 긁고 냄새를 맡는다",
+  "이 전시회는 볼만한게 없다",
+  "바닐라코딩에 온 걸 후회한다",
+  "전 여자(남자)친구가 생각난다",
   "수영장에서 오줌 싼 적이 있다",
   "바닐라코딩에 좋아하는 사람이 있다",
+  "머리를 긁고 냄새를 맡는 버릇이 있다",
   "만난 이성 수를 손가락으로 셀 수 없다",
   "신었던 양말을 또 신으려 냄새를 맡은 적이 있다",
   "켄님은 바닐라코딩으로 막대한 수익을 얻었다고 생각한다",
+];
+
+export const HARDCORE_QUESTION_LIST = [
+  "나는 바지에 똥을 싼 적이 있다",
+  "나는 성경험이 없다",
+  "2000만원이 넘는 빚이 있다",
+  "처음 보는 이성과 원나잇을 한 적이 있다",
+  "아직 아무한테도 말하지 않은 비밀이 있다",
+  "자살시도를 한 적이 있다",
+  "나는 내 애인과 속궁합이 잘 맞는다",
+  "나는 왕따 경험이 있다",
+  "누군가를 왕따 시킨 적이 있다",
+  "물건을 훔친 적이 있다",
 ];
 
 // Mediapipe-facemesh Keypoints

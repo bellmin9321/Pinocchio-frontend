@@ -1,18 +1,17 @@
 import React from "react";
 import styled from "styled-components";
+import { MdCallEnd } from "react-icons/md";
+import { FaExchangeAlt } from "react-icons/fa";
+import { AiTwotoneAudio, AiOutlineAudioMuted } from "react-icons/ai";
+import { BsCameraVideoFill, BsCameraVideoOffFill } from "react-icons/bs";
 
 import useStore from "../zustand/store";
-import { FaExchangeAlt } from "react-icons/fa";
-import { MdCallEnd } from "react-icons/md";
-import { BsCameraVideoFill, BsCameraVideoOffFill } from "react-icons/bs";
-import { AiTwotoneAudio, AiOutlineAudioMuted } from "react-icons/ai";
 
-const WebcamButton = () => {
+const WebcamButton = ({ isQuestionStarted }) => {
   const { isMuted, isWebcamOpen } = useStore();
 
   const showModalSmall = () => {
-    useStore.setState({ modalSize: "SMALL" });
-    useStore.setState({ showModal: true });
+    useStore.setState({ modalSize: "S", showModal: true });
   };
 
   return (
@@ -28,6 +27,7 @@ const WebcamButton = () => {
         {isMuted ? <AiOutlineAudioMuted /> : <AiTwotoneAudio />}
       </Icon>
       <Icon
+        disabled={isQuestionStarted}
         style={
           !isWebcamOpen
             ? { backgroundColor: "#ea4335" }
@@ -37,7 +37,10 @@ const WebcamButton = () => {
       >
         {isWebcamOpen ? <BsCameraVideoFill /> : <BsCameraVideoOffFill />}
       </Icon>
-      <Icon onClick={useStore((state) => state.toggleIsMirrored)}>
+      <Icon
+        disabled={isQuestionStarted}
+        onClick={useStore((state) => state.toggleIsMirrored)}
+      >
         <FaExchangeAlt />
       </Icon>
       <Icon className="end" onClick={showModalSmall}>
@@ -55,6 +58,7 @@ const WebcamButtonLayout = styled.nav`
   justify-content: space-around;
   width: 25%;
   height: 10%;
+  z-index: 15;
 
   .end {
     width: 60px;
@@ -77,10 +81,10 @@ const Icon = styled.button`
   font-size: 20px;
   border-radius: 50%;
   color: white;
-  cursor: pointer;
-  opacity: 0.9;
+  cursor: ${(props) => (props.disabled ? "" : "pointer")};
+  opacity: ${(props) => (props.disabled ? 0.5 : 0.9)};
 
-  :hover {
+  :${(props) => (props.disabled ? "" : "hover")} {
     opacity: 1;
     transform: scale(1.03);
   }

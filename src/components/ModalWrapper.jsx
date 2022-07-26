@@ -7,11 +7,28 @@ function ModalWrapper({ children }) {
   const { modalSize } = useStore();
 
   return ReactDom.createPortal(
-    <ModalLayout onClick={() => useStore.setState({ showModal: false })}>
-      {modalSize === "SMALL" ? (
-        <ModalBoxSmall>{children}</ModalBoxSmall>
+    <ModalLayout
+      onClick={() =>
+        modalSize === "S" && useStore.setState({ showModal: false })
+      }
+    >
+      {modalSize === "S" ? (
+        <ModalBox>{children}</ModalBox>
+      ) : modalSize === "M" ? (
+        <ModalBox style={{ width: "600px", height: "250px" }}>
+          {children}
+        </ModalBox>
       ) : (
-        <ModalBoxLarge>{children}</ModalBoxLarge>
+        <ModalBox
+          style={{
+            backgroundColor: "black",
+            boxShadow: "none",
+            width: "100%",
+            height: "100%",
+          }}
+        >
+          {children}
+        </ModalBox>
       )}
     </ModalLayout>,
     document.getElementById("modal"),
@@ -24,11 +41,11 @@ const ModalLayout = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.6);
-  z-index: 99999;
+  background-color: rgba(22, 21, 21, 0.6);
+  z-index: 15;
 `;
 
-const ModalBoxSmall = styled.div`
+const ModalBox = styled.div`
   position: fixed;
   top: 50%;
   left: 50%;
@@ -42,24 +59,7 @@ const ModalBoxSmall = styled.div`
   background-color: #1c6aaa;
   box-shadow: 0px 8px 30px;
   border-radius: 20px;
-  z-index: 999999;
-`;
-
-const ModalBoxLarge = styled.div`
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  width: 600px;
-  height: 250px;
-  transform: translate(-50%, -50%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background-color: #0e4979;
-  box-shadow: 0px 8px 30px;
-  border-radius: 20px;
-  z-index: 999999;
+  z-index: 20;
 `;
 
 export default ModalWrapper;
