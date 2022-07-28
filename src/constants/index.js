@@ -39,7 +39,7 @@ export const HARDCORE_QUESTION_LIST = [
   "나는 내 애인과 속궁합이 잘 맞는다",
   "나는 왕따 경험이 있다",
   "누군가를 왕따 시킨 적이 있다",
-  "물건을 훔친 적이 있다",
+  "남의 물건을 훔친 적이 있다",
 ];
 
 // Mediapipe-facemesh Keypoints
