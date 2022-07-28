@@ -15,7 +15,9 @@ function ModalTerminate() {
       isWebcamOpen: true,
       isMirrored: true,
       showModal: false,
+      questionCount: 0,
       isHardcoreSelected: false,
+      randomQuestionList: [],
     });
     navigate("/");
   };
