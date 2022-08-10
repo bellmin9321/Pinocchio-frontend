@@ -8,7 +8,7 @@ function NotFound() {
   return (
     <NotFoundLayout>
       <div className="image_box">
-        <img height={"650"} src="image/Error_Image.png" />
+        <img height={"650"} src="image/Error_Image.png" alt="error-img" />
       </div>
       <div className="error_box">
         <div className="error_number">404</div>
