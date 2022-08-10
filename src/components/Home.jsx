@@ -6,7 +6,7 @@ function Home() {
   return (
     <>
       <Link to="/main">
-        <Logo src="image/beHonest.png" />
+        <Logo src="image/beHonest.png" alt="logo-img" />
         <ClickText>CLICK !</ClickText>
       </Link>
       <Title>Be honest .</Title>
